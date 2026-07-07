@@ -57,6 +57,7 @@ HUBS = {
     "FOR": "Fortaleza",
     "BEL": "Belém",
     "BSB": "Brasília",
+    "GRU": "São Paulo (TESTE)",
 }
 
 MES_BUSCA = "2027-01-01"  # mês de referência (a API devolve o preço mais barato por dia do mês)
