@@ -1,5 +1,137 @@
 [
-  {"data_busca":"2026-07-07","hub":"FOR","hub_nome":"Fortaleza","data_ida":"2027-01-05","data_volta":"2027-01-15","preco_total_brl":11840.0,"fonte":"google_flights_serpapi"},
-  {"data_busca":"2026-07-07","hub":"BEL","hub_nome":"Belém","data_ida":"2027-01-05","data_volta":"2027-01-15","preco_total_brl":12960.0,"fonte":"google_flights_serpapi"},
-  {"data_busca":"2026-07-07","hub":"BSB","hub_nome":"Brasília","data_ida":"2027-01-10","data_volta":"2027-01-20","preco_total_brl":10990.0,"fonte":"google_flights_serpapi"}
+  {
+    "data_busca": "2026-07-07",
+    "hub": "FOR",
+    "hub_nome": "Fortaleza",
+    "data_ida": "2027-01-05",
+    "data_volta": "2027-01-15",
+    "preco_total_brl": 11840.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "BEL",
+    "hub_nome": "Belém",
+    "data_ida": "2027-01-05",
+    "data_volta": "2027-01-15",
+    "preco_total_brl": 12960.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "BSB",
+    "hub_nome": "Brasília",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_total_brl": 10990.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "GRU",
+    "hub_nome": "São Paulo (TESTE)",
+    "data_ida": "2027-01-15",
+    "data_volta": "2027-01-25",
+    "preco_total_brl": 15018.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "GRU",
+    "hub_nome": "São Paulo (TESTE)",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_total_brl": 15978.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "BSB",
+    "hub_nome": "Brasília",
+    "data_ida": "2027-01-15",
+    "data_volta": "2027-01-25",
+    "preco_total_brl": 21919.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "GRU",
+    "hub_nome": "São Paulo (TESTE)",
+    "data_ida": "2027-01-05",
+    "data_volta": "2027-01-15",
+    "preco_total_brl": 23482.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "BSB",
+    "hub_nome": "Brasília",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_total_brl": 24910.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "BEL",
+    "hub_nome": "Belém",
+    "data_ida": "2027-01-15",
+    "data_volta": "2027-01-25",
+    "preco_total_brl": 25025.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "BEL",
+    "hub_nome": "Belém",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_total_brl": 27973.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "FOR",
+    "hub_nome": "Fortaleza",
+    "data_ida": "2027-01-15",
+    "data_volta": "2027-01-25",
+    "preco_total_brl": 28005.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "FOR",
+    "hub_nome": "Fortaleza",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_total_brl": 30084.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "BSB",
+    "hub_nome": "Brasília",
+    "data_ida": "2027-01-05",
+    "data_volta": "2027-01-15",
+    "preco_total_brl": 33658.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "FOR",
+    "hub_nome": "Fortaleza",
+    "data_ida": "2027-01-05",
+    "data_volta": "2027-01-15",
+    "preco_total_brl": 35160.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "BEL",
+    "hub_nome": "Belém",
+    "data_ida": "2027-01-05",
+    "data_volta": "2027-01-15",
+    "preco_total_brl": 38477.0,
+    "fonte": "google_flights_serpapi"
+  }
 ]
