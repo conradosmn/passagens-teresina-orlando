@@ -133,5 +133,170 @@
     "data_volta": "2027-01-15",
     "preco_total_brl": 38477.0,
     "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "GRU",
+    "hub_nome": "São Paulo",
+    "data_ida": "2027-01-15",
+    "data_volta": "2027-01-25",
+    "preco_internacional_brl": 15018.0,
+    "preco_domestico_brl": 8125.0,
+    "preco_total_brl": 23143.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "GRU",
+    "hub_nome": "São Paulo",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_internacional_brl": 15978.0,
+    "preco_domestico_brl": 8125.0,
+    "preco_total_brl": 24103.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "BSB",
+    "hub_nome": "Brasília",
+    "data_ida": "2027-01-15",
+    "data_volta": "2027-01-25",
+    "preco_internacional_brl": 21919.0,
+    "preco_domestico_brl": 6670.0,
+    "preco_total_brl": 28589.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "BSB",
+    "hub_nome": "Brasília",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_internacional_brl": 24910.0,
+    "preco_domestico_brl": 6670.0,
+    "preco_total_brl": 31580.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "GRU",
+    "hub_nome": "São Paulo",
+    "data_ida": "2027-01-05",
+    "data_volta": "2027-01-15",
+    "preco_internacional_brl": 23482.0,
+    "preco_domestico_brl": 8125.0,
+    "preco_total_brl": 31607.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "BEL",
+    "hub_nome": "Belém",
+    "data_ida": "2027-01-15",
+    "data_volta": "2027-01-25",
+    "preco_internacional_brl": 25025.0,
+    "preco_domestico_brl": 8496.0,
+    "preco_total_brl": 33521.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "THE",
+    "hub_nome": "Teresina (direto/conexão auto)",
+    "data_ida": "2027-01-15",
+    "data_volta": "2027-01-25",
+    "preco_internacional_brl": 34029.0,
+    "preco_domestico_brl": null,
+    "preco_total_brl": 34029.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "FOR",
+    "hub_nome": "Fortaleza",
+    "data_ida": "2027-01-15",
+    "data_volta": "2027-01-25",
+    "preco_internacional_brl": 28005.0,
+    "preco_domestico_brl": 7878.0,
+    "preco_total_brl": 35883.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "BEL",
+    "hub_nome": "Belém",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_internacional_brl": 27973.0,
+    "preco_domestico_brl": 8496.0,
+    "preco_total_brl": 36469.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "THE",
+    "hub_nome": "Teresina (direto/conexão auto)",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_internacional_brl": 36927.0,
+    "preco_domestico_brl": null,
+    "preco_total_brl": 36927.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "FOR",
+    "hub_nome": "Fortaleza",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_internacional_brl": 30084.0,
+    "preco_domestico_brl": 7878.0,
+    "preco_total_brl": 37962.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "BSB",
+    "hub_nome": "Brasília",
+    "data_ida": "2027-01-05",
+    "data_volta": "2027-01-15",
+    "preco_internacional_brl": 33658.0,
+    "preco_domestico_brl": 6670.0,
+    "preco_total_brl": 40328.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "FOR",
+    "hub_nome": "Fortaleza",
+    "data_ida": "2027-01-05",
+    "data_volta": "2027-01-15",
+    "preco_internacional_brl": 35160.0,
+    "preco_domestico_brl": 7878.0,
+    "preco_total_brl": 43038.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "THE",
+    "hub_nome": "Teresina (direto/conexão auto)",
+    "data_ida": "2027-01-05",
+    "data_volta": "2027-01-15",
+    "preco_internacional_brl": 43743.0,
+    "preco_domestico_brl": null,
+    "preco_total_brl": 43743.0,
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-07",
+    "hub": "BEL",
+    "hub_nome": "Belém",
+    "data_ida": "2027-01-05",
+    "data_volta": "2027-01-15",
+    "preco_internacional_brl": 38477.0,
+    "preco_domestico_brl": 8496.0,
+    "preco_total_brl": 46973.0,
+    "fonte": "google_flights_serpapi"
   }
 ]
