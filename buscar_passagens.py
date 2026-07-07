@@ -101,10 +101,53 @@ SERPAPI_URL = "https://serpapi.com/search"
 # GOOGLE FLIGHTS (via SerpApi)
 # ---------------------------------------------------------------------------
 
+def extrair_detalhes(voo):
+    """
+    A partir de um objeto de voo do SerpApi (best_flights/other_flights),
+    extrai o itinerário legível: cada trecho (segmento) com companhia, número
+    do voo, aeroportos e horários, mais as conexões (layovers) e a duração
+    total. Isso alimenta a "cascata da viagem" no painel.
+    """
+    if not isinstance(voo, dict):
+        return None
+    segmentos = []
+    for seg in voo.get("flights", []) or []:
+        dep = seg.get("departure_airport") or {}
+        arr = seg.get("arrival_airport") or {}
+        segmentos.append({
+            "de": dep.get("id"),
+            "de_nome": dep.get("name"),
+            "partida": dep.get("time"),        # ex.: "2027-01-10 22:15"
+            "para": arr.get("id"),
+            "para_nome": arr.get("name"),
+            "chegada": arr.get("time"),
+            "cia": seg.get("airline"),
+            "voo": seg.get("flight_number"),
+            "duracao_min": seg.get("duration"),
+        })
+    layovers = []
+    for lay in voo.get("layovers", []) or []:
+        layovers.append({
+            "aeroporto": lay.get("id"),
+            "nome": lay.get("name"),
+            "duracao_min": lay.get("duration"),
+        })
+    if not segmentos:
+        return None
+    return {
+        "segmentos": segmentos,
+        "layovers": layovers,
+        "duracao_total_min": voo.get("total_duration"),
+    }
+
+
 def buscar_voo(origem, destino, data_ida, data_volta):
     """
-    Consulta o Google Flights para uma rota/data específica e devolve o menor
-    preço encontrado (total do grupo, em BRL) ou None se não houver resultado.
+    Consulta o Google Flights para uma rota/data específica. Devolve um dict
+    {"preco": float, "detalhes": {...}|None} com o menor preço do grupo (BRL)
+    e o itinerário da opção de voo mais barata (para a cascata), ou None se
+    não houver resultado. Os voos de ida-e-volta do Google trazem primeiro o
+    trecho de IDA, então o itinerário capturado é o da ida.
     """
     params = {
         "engine": "google_flights",
@@ -134,20 +177,32 @@ def buscar_voo(origem, destino, data_ida, data_volta):
     dados = resp.json()
 
     # O menor preço confiável costuma vir em price_insights.lowest_price;
-    # senão, pegamos o menor entre best_flights + other_flights.
+    # senão, pegamos o menor entre best_flights + other_flights. Em paralelo,
+    # guardamos o objeto de voo mais barato (com itinerário) para a cascata.
     precos = []
     insights = dados.get("price_insights") or {}
     if isinstance(insights.get("lowest_price"), (int, float)):
         precos.append(float(insights["lowest_price"]))
 
+    voo_mais_barato = None
+    preco_voo_mais_barato = None
     for chave in ("best_flights", "other_flights"):
         for voo in dados.get(chave, []) or []:
             if isinstance(voo.get("price"), (int, float)):
-                precos.append(float(voo["price"]))
+                p = float(voo["price"])
+                precos.append(p)
+                if preco_voo_mais_barato is None or p < preco_voo_mais_barato:
+                    preco_voo_mais_barato = p
+                    voo_mais_barato = voo
 
     if not precos:
         return None
-    return min(precos)
+    return {
+        "preco": min(precos),
+        # Itinerário da opção mais barata com voos listados (a ida). Pode ser
+        # None se o menor preço só veio dos "insights", sem voo detalhado.
+        "detalhes": extrair_detalhes(voo_mais_barato),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -198,12 +253,13 @@ def main():
         for origem_hub, nome_hub in HUBS.items():
             if origem_hub == ORIGEM_DOMESTICA:
                 continue  # THE direto não tem perna doméstica (é a própria origem)
-            preco_dom = buscar_voo(ORIGEM_DOMESTICA, origem_hub,
-                                   DATA_DOMESTICA_IDA, DATA_DOMESTICA_VOLTA)
+            res_dom = buscar_voo(ORIGEM_DOMESTICA, origem_hub,
+                                 DATA_DOMESTICA_IDA, DATA_DOMESTICA_VOLTA)
             time.sleep(1)
-            if preco_dom is None:
+            if res_dom is None:
                 print(f"Teresina -> {nome_hub} ({origem_hub}): sem resultado.")
             else:
+                preco_dom = res_dom["preco"]
                 print(f"Teresina -> {nome_hub} ({origem_hub}): R$ {preco_dom:.2f}")
                 domestico_por_hub[origem_hub] = preco_dom
 
@@ -221,12 +277,15 @@ def main():
             di = date.fromisoformat(data_ida)
             data_volta = (di + timedelta(days=DURACAO_VIAGEM_DIAS)).isoformat()
 
-            preco_intl = buscar_voo(origem_hub, DESTINO, data_ida, data_volta)
+            res_intl = buscar_voo(origem_hub, DESTINO, data_ida, data_volta)
             time.sleep(1)
 
-            if preco_intl is None:
+            if res_intl is None:
                 print(f"{nome_hub} ({origem_hub}) {data_ida}: sem resultado internacional.")
                 continue
+
+            preco_intl = res_intl["preco"]
+            detalhes_intl = res_intl["detalhes"]
 
             preco_dom = domestico_por_hub.get(origem_hub)  # pode ser None
             preco_total = preco_intl + (preco_dom or 0.0)
@@ -234,6 +293,8 @@ def main():
             dom_txt = f" + dom R$ {preco_dom:.2f}" if preco_dom else " (sem doméstico)"
             print(f"{nome_hub} ({origem_hub}) {data_ida} -> {data_volta}: "
                   f"intl R$ {preco_intl:.2f}{dom_txt} = total R$ {preco_total:.2f}")
+
+            preco_por_pax = round(preco_total / (ADULTOS + CRIANCAS), 2)
 
             novos_registros.append({
                 "data_busca": hoje,
@@ -244,6 +305,12 @@ def main():
                 "preco_internacional_brl": preco_intl,
                 "preco_domestico_brl": preco_dom,   # None se não monitorado/sem dado
                 "preco_total_brl": preco_total,     # total porta a porta (ou só intl)
+                # Média por passageiro (total do grupo / 4). É média mesmo:
+                # o Google devolve preço do grupo, não o unitário por pessoa.
+                "preco_medio_passageiro_brl": preco_por_pax,
+                # Itinerário da IDA internacional (hub -> Orlando), p/ a cascata.
+                # O trecho Teresina -> hub é valor de referência, sem voos.
+                "detalhes_ida": detalhes_intl,
                 "fonte": "google_flights_serpapi",
             })
 
@@ -254,6 +321,9 @@ def main():
     novos_registros.sort(key=lambda x: x["preco_total_brl"])
     mais_barato = novos_registros[0]
 
+    # Idempotente por dia: se já houver registros da busca de hoje (ex.: o
+    # workflow rodou 2x no mesmo dia), substitui em vez de duplicar.
+    historico = [r for r in historico if r.get("data_busca") != hoje]
     historico.extend(novos_registros)
     salvar_historico(historico)
 

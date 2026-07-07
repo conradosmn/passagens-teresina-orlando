@@ -203,6 +203,81 @@
     margin-top: 8px;
   }
 
+  /* --- Cascata da viagem (detalhe da melhor combinação) --- */
+  .casc-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .casc-pax {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .casc-pax b { color: var(--teal); font-weight: 600; }
+  .casc {
+    position: relative;
+    padding-left: 26px;
+  }
+  .casc::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 6px; bottom: 6px;
+    width: 2px;
+    background: var(--line);
+  }
+  .leg { position: relative; padding: 4px 0 18px; }
+  .leg:last-child { padding-bottom: 0; }
+  .leg-dot {
+    position: absolute;
+    left: -26px; top: 6px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--bg-panel);
+    box-shadow: 0 0 0 2px currentColor;
+  }
+  .leg-dot.dom { color: var(--text-dim); background: var(--bg-panel-raised); }
+  .leg-dot.intl { color: var(--teal); background: var(--teal); }
+  .leg-dot.dest { color: var(--amber); background: var(--amber); }
+  .leg-route {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  }
+  .leg-kind {
+    font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 100px; font-weight: 600;
+  }
+  .kind-dom { background: rgba(135,146,168,0.16); color: var(--text-dim); }
+  .kind-intl { background: rgba(63,191,174,0.16); color: var(--teal); }
+  .leg-times {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; color: var(--text-dim);
+    margin-top: 5px;
+  }
+  .leg-times b { color: var(--text); font-weight: 500; }
+  .leg-cia { color: var(--text-dim); }
+  .leg-note { font-size: 11px; color: var(--text-dim); font-style: italic; margin-top: 4px; }
+  .leg-stop {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--amber);
+    margin: 8px 0 8px 0;
+    padding-left: 2px;
+  }
+  .casc-price {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px; font-weight: 600;
+    color: var(--amber);
+    white-space: nowrap;
+  }
+  .casc-price.dim { color: var(--text-dim); font-weight: 500; }
+
   @media (max-width: 640px) {
     .stat-grid { grid-template-columns: 1fr; }
     .flap-price { font-size: 40px; }
@@ -229,6 +304,20 @@
     </div>
     <p style="margin:14px 0 0; font-size:12px; color:var(--text-dim); line-height:1.5;">
       Os dois trechos (Teresina → hub e hub → Orlando) são comprados <b style="color:var(--text)">separadamente</b> — confira se os horários das conexões casam antes de comprar.
+    </p>
+  </div>
+
+  <div class="panel" id="detalhe-panel" style="display:none;">
+    <div class="casc-head">
+      <div>
+        <p class="panel-title">Detalhe da melhor combinação de hoje</p>
+        <p class="panel-sub" id="detalhe-sub" style="margin:0;">cascata da viagem porta a porta</p>
+      </div>
+      <div class="casc-pax" id="detalhe-pax"></div>
+    </div>
+    <div class="casc" id="detalhe-casc"></div>
+    <p class="leg-note" style="margin-top:16px;">
+      Itinerário da <b>ida internacional</b> lido do Google Flights. O trecho Teresina → hub é <b>estimativa de referência</b> (busca doméstica desligada p/ economizar cota) — confirme voos e horários no site da companhia antes de comprar.
     </p>
   </div>
 
@@ -303,6 +392,106 @@ function fmtData(iso) {
   return `${d}/${m}`;
 }
 
+// "2027-01-10 22:15" -> "22:15" (só a hora)
+function fmtHora(t) {
+  if (!t) return '--';
+  const p = t.split(' ');
+  return p.length > 1 ? p[1] : t;
+}
+
+// "2027-01-10 22:15" -> "10/01 22:15"
+function fmtDiaHora(t) {
+  if (!t) return '--';
+  const [dia, hora] = t.split(' ');
+  const [y, m, d] = dia.split('-');
+  return `${d}/${m} ${hora || ''}`.trim();
+}
+
+// minutos -> "12h 30m"
+function fmtDur(min) {
+  if (min == null) return '';
+  const h = Math.floor(min / 60), m = min % 60;
+  return [h ? h + 'h' : '', m ? m + 'm' : ''].filter(Boolean).join(' ');
+}
+
+function renderizarDetalhe(maisBarato) {
+  const painel = document.getElementById('detalhe-panel');
+  const det = maisBarato.detalhes_ida;
+  const casc = document.getElementById('detalhe-casc');
+
+  // Cabeçalho: média por passageiro (total do grupo / 4)
+  const pax = maisBarato.preco_medio_passageiro_brl;
+  document.getElementById('detalhe-pax').innerHTML = pax
+    ? `total <b>${fmtBRL(maisBarato.preco_total_brl)}</b> · média/pax <b>${fmtBRL(pax)}</b> (2 adt + 2 chd)`
+    : `total <b>${fmtBRL(maisBarato.preco_total_brl)}</b>`;
+  document.getElementById('detalhe-sub').textContent =
+    `${maisBarato.hub_nome || maisBarato.hub} · ida ${fmtData(maisBarato.data_ida)} → volta ${fmtData(maisBarato.data_volta)}`;
+
+  let html = '';
+
+  // 1) Trecho doméstico Teresina -> hub (estimativa, sem itinerário)
+  if (maisBarato.preco_domestico_brl) {
+    html += `
+      <div class="leg">
+        <span class="leg-dot dom"></span>
+        <div class="leg-route">
+          Teresina (THE) → ${maisBarato.hub_nome || maisBarato.hub}
+          <span class="leg-kind kind-dom">doméstico</span>
+          <span class="casc-price dim" style="margin-left:auto;">~ ${fmtBRL(maisBarato.preco_domestico_brl)}</span>
+        </div>
+        <div class="leg-note">valor de referência · casar horário com o voo internacional</div>
+      </div>`;
+  }
+
+  // 2) Trecho internacional hub -> Orlando (itinerário real, com conexões)
+  if (det && det.segmentos && det.segmentos.length) {
+    const segs = det.segmentos;
+    const dur = det.duracao_total_min ? ` · ${fmtDur(det.duracao_total_min)} no total` : '';
+    html += `
+      <div class="leg">
+        <span class="leg-dot intl"></span>
+        <div class="leg-route">
+          ${maisBarato.hub_nome || maisBarato.hub} → Orlando (MCO)
+          <span class="leg-kind kind-intl">internacional · ida</span>
+          <span class="casc-price" style="margin-left:auto;">${fmtBRL(maisBarato.preco_internacional_brl)}</span>
+        </div>
+        <div class="leg-note">${segs.length === 1 ? 'voo direto' : (segs.length - 1) + (segs.length - 1 === 1 ? ' conexão' : ' conexões')}${dur}</div>
+      </div>`;
+
+    segs.forEach((s, i) => {
+      html += `
+        <div class="leg">
+          <span class="leg-dot ${i === segs.length - 1 ? 'dest' : 'intl'}"></span>
+          <div class="leg-route">${s.de || '??'} → ${s.para || '??'}</div>
+          <div class="leg-times">
+            <b>${fmtHora(s.partida)}</b> ${s.de_nome || s.de || ''}
+            &nbsp;→&nbsp; <b>${fmtHora(s.chegada)}</b> ${s.para_nome || s.para || ''}
+            ${s.duracao_min ? ' · ' + fmtDur(s.duracao_min) : ''}
+          </div>
+          <div class="leg-times leg-cia">${[s.cia, s.voo].filter(Boolean).join(' · ')}</div>
+        </div>`;
+      // conexão entre este segmento e o próximo
+      const lay = det.layovers && det.layovers[i];
+      if (lay && i < segs.length - 1) {
+        html += `<div class="leg-stop">↳ conexão em ${lay.nome || lay.aeroporto || '??'} · ${fmtDur(lay.duracao_min)} de espera</div>`;
+      }
+    });
+  } else {
+    html += `
+      <div class="leg">
+        <span class="leg-dot intl"></span>
+        <div class="leg-route">
+          ${maisBarato.hub_nome || maisBarato.hub} → Orlando (MCO)
+          <span class="casc-price" style="margin-left:auto;">${fmtBRL(maisBarato.preco_internacional_brl)}</span>
+        </div>
+        <div class="leg-note">itinerário detalhado ainda não capturado nesta busca</div>
+      </div>`;
+  }
+
+  casc.innerHTML = html;
+  painel.style.display = 'block';
+}
+
 const TETO_PRECO = 20000; // mantenha igual ao TETO_PRECO_BRL do buscar_passagens.py
 
 const CORES_HUB = { FOR: '#F2A340', BEL: '#3FBFAE', BSB: '#C58BF2', GRU: '#6FA8F2' };
@@ -321,6 +510,8 @@ function renderizar(historico) {
   } else {
     document.getElementById('flap-cia').textContent = 'só intl · falta somar Teresina→hub';
   }
+
+  renderizarDetalhe(maisBarato);
 
   const pill = document.getElementById('status-pill');
   const pillText = document.getElementById('status-text');
