@@ -360,17 +360,25 @@
 
 <script>
 async function carregarDados() {
+  let historico;
   try {
     const resp = await fetch('data/historico.json', { cache: 'no-store' });
     if (!resp.ok) throw new Error('sem dados ainda');
-    const historico = await resp.json();
-    if (!Array.isArray(historico) || historico.length === 0) {
-      mostrarVazio();
-      return;
-    }
+    historico = await resp.json();
+  } catch (e) {
+    // Só mostra "vazio" quando REALMENTE não deu pra buscar os dados.
+    mostrarVazio();
+    return;
+  }
+  if (!Array.isArray(historico) || historico.length === 0) {
+    mostrarVazio();
+    return;
+  }
+  // Erro ao DESENHAR não deve apagar o painel (senão o preço some).
+  try {
     renderizar(historico);
   } catch (e) {
-    mostrarVazio();
+    console.error('Erro ao renderizar o painel:', e);
   }
 }
 
@@ -553,21 +561,31 @@ function renderizar(historico) {
     };
   });
 
-  new Chart(document.getElementById('chartHistorico'), {
-    type: 'line',
-    data: { labels: datasBusca.map(fmtData), datasets },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: true, labels: { color: '#E8ECF5', font: { family: 'IBM Plex Mono', size: 11 }, boxWidth: 12 } } },
-      scales: {
-        x: { ticks: { color: '#8792A8', font: { family: 'IBM Plex Mono', size: 11 } }, grid: { color: '#26314A' } },
-        y: {
-          ticks: { color: '#8792A8', font: { family: 'IBM Plex Mono', size: 11 }, callback: v => 'R$ ' + (v/1000).toFixed(1) + 'k' },
-          grid: { color: '#26314A' }
+  // O gráfico depende da lib externa Chart.js. Se ela não carregar (rede/CDN
+  // bloqueada), NÃO pode derrubar o resto do painel — por isso o try/catch.
+  try {
+    if (typeof Chart === 'undefined') throw new Error('Chart.js não carregou');
+    new Chart(document.getElementById('chartHistorico'), {
+      type: 'line',
+      data: { labels: datasBusca.map(fmtData), datasets },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: true, labels: { color: '#E8ECF5', font: { family: 'IBM Plex Mono', size: 11 }, boxWidth: 12 } } },
+        scales: {
+          x: { ticks: { color: '#8792A8', font: { family: 'IBM Plex Mono', size: 11 } }, grid: { color: '#26314A' } },
+          y: {
+            ticks: { color: '#8792A8', font: { family: 'IBM Plex Mono', size: 11 }, callback: v => 'R$ ' + (v/1000).toFixed(1) + 'k' },
+            grid: { color: '#26314A' }
+          }
         }
       }
-    }
-  });
+    });
+  } catch (e) {
+    console.error('Gráfico indisponível:', e);
+    const cv = document.getElementById('chartHistorico');
+    if (cv) cv.insertAdjacentHTML('afterend',
+      '<p class="panel-sub" style="text-align:center;padding:20px 0;">gráfico indisponível offline (Chart.js não carregou) — os dados abaixo seguem valendo</p>');
+  }
 
   const recentes = [...historico]
     .sort((a, b) => (a.data_busca + a.data_ida < b.data_busca + b.data_ida ? 1 : -1))
