@@ -1,0 +1,41 @@
+name: Busca diária de passagens Teresina -> Orlando
+
+on:
+  schedule:
+    # Roda todo dia às 09:00 (horário de Brasília, UTC-3) => 12:00 UTC
+    - cron: "0 12 * * *"
+  workflow_dispatch: {}   # permite rodar manualmente pela aba "Actions" no GitHub
+
+permissions:
+  contents: write   # necessário p/ o workflow commitar o histórico de preços de volta no repo
+
+jobs:
+  buscar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Rodar busca de passagens
+        env:
+          TRAVELPAYOUTS_TOKEN: ${{ secrets.TRAVELPAYOUTS_TOKEN }}
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+        run: python buscar_passagens.py
+
+      - name: Commitar histórico de preços atualizado
+        run: |
+          git config --global user.name "bot-passagens"
+          git config --global user.email "bot@local"
+          git add docs/data/historico.json
+          git diff --staged --quiet || git commit -m "Atualiza histórico de preços ($(date -u +%F))"
+          git push
