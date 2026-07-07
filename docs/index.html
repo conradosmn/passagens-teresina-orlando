@@ -61,7 +61,7 @@
     overflow: hidden;
   }
   .board::before {
-    content: 'MENOR PREÇO (2 ADT + 2 CHD)';
+    content: 'MENOR TOTAL PORTA A PORTA (2 ADT + 2 CHD)';
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px;
     letter-spacing: 0.15em;
@@ -166,6 +166,19 @@
   tbody td { padding: 10px 8px; border-bottom: 1px solid var(--line); font-family: 'IBM Plex Mono', monospace; }
   tbody tr:last-child td { border-bottom: none; }
   .price-cell { color: var(--amber); font-weight: 600; }
+  .tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 100px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .tag-best { background: rgba(63,191,174,0.18); color: var(--teal); }
+  .tag-mid { background: rgba(242,163,64,0.15); color: var(--amber); }
+  .tag-expensive { background: rgba(224,102,102,0.16); color: var(--red); }
 
   .empty-state {
     text-align: center;
@@ -200,7 +213,7 @@
 <div class="wrap">
   <p class="eyebrow">Busca automática · roda todo dia</p>
   <h1>Rumo a Orlando</h1>
-  <p class="subtitle">preço real 2 adultos + 2 crianças · janeiro de 2027 · hubs FOR / BEL / BSB · Google Flights via SerpApi</p>
+  <p class="subtitle">preço real 2 adultos + 2 crianças · janeiro de 2027 · Teresina + FOR / BEL / BSB / GRU → Orlando · Google Flights via SerpApi</p>
 
   <div class="board">
     <div class="flap-row">
@@ -215,7 +228,7 @@
       <span class="dot"></span><span id="status-text"></span>
     </div>
     <p style="margin:14px 0 0; font-size:12px; color:var(--text-dim); line-height:1.5;">
-      Falta somar a perna <b style="color:var(--text)">Teresina → hub</b> (ainda não monitorada) e conferir se os horários casam antes de comprar.
+      Os dois trechos (Teresina → hub e hub → Orlando) são comprados <b style="color:var(--text)">separadamente</b> — confira se os horários das conexões casam antes de comprar.
     </p>
   </div>
 
@@ -242,11 +255,11 @@
 
   <div class="panel" id="table-panel">
     <p class="panel-title">Últimas datas de ida monitoradas</p>
-    <p class="panel-sub">Ofertas mais recentes por data de ida/volta</p>
+    <p class="panel-sub">Total = Teresina→hub + hub→Orlando. O selo compara com a opção mais barata da mesma data: <span class="tag tag-best">melhor</span> <span class="tag tag-mid">+até 30%</span> <span class="tag tag-expensive">+30% ou mais</span></p>
     <div style="overflow-x:auto;">
       <table>
         <thead>
-          <tr><th>Busca</th><th>Hub</th><th>Ida</th><th>Volta</th><th>Preço total</th></tr>
+          <tr><th>Busca</th><th>Hub</th><th>Ida</th><th>Hub→Orlando</th><th>THE→Hub</th><th>Total</th></tr>
         </thead>
         <tbody id="table-body"></tbody>
       </table>
@@ -290,9 +303,9 @@ function fmtData(iso) {
   return `${d}/${m}`;
 }
 
-const TETO_PRECO = 12000; // mantenha igual ao TETO_PRECO_BRL do buscar_passagens.py
+const TETO_PRECO = 20000; // mantenha igual ao TETO_PRECO_BRL do buscar_passagens.py
 
-const CORES_HUB = { FOR: '#F2A340', BEL: '#3FBFAE', BSB: '#C58BF2' };
+const CORES_HUB = { FOR: '#F2A340', BEL: '#3FBFAE', BSB: '#C58BF2', GRU: '#6FA8F2' };
 
 function renderizar(historico) {
   const ordenado = [...historico].sort((a, b) => a.preco_total_brl - b.preco_total_brl);
@@ -301,8 +314,13 @@ function renderizar(historico) {
   document.getElementById('flap-price').textContent = fmtBRL(maisBarato.preco_total_brl);
   document.getElementById('flap-price').classList.remove('loading');
   document.getElementById('flap-ida').textContent = fmtData(maisBarato.data_ida) + ' → ' + fmtData(maisBarato.data_volta);
-  document.getElementById('flap-volta').textContent = (maisBarato.hub_nome || maisBarato.hub) + ' → Orlando';
-  document.getElementById('flap-cia').textContent = 'ida e volta · econômica';
+  document.getElementById('flap-volta').textContent = 'Teresina → ' + (maisBarato.hub_nome || maisBarato.hub) + ' → Orlando';
+  if (maisBarato.preco_domestico_brl) {
+    document.getElementById('flap-cia').textContent =
+      'intl ' + fmtBRL(maisBarato.preco_internacional_brl) + ' + THE→hub ' + fmtBRL(maisBarato.preco_domestico_brl);
+  } else {
+    document.getElementById('flap-cia').textContent = 'só intl · falta somar Teresina→hub';
+  }
 
   const pill = document.getElementById('status-pill');
   const pillText = document.getElementById('status-text');
@@ -364,15 +382,36 @@ function renderizar(historico) {
     .sort((a, b) => (a.data_busca + a.data_ida < b.data_busca + b.data_ida ? 1 : -1))
     .slice(0, 15);
 
-  document.getElementById('table-body').innerHTML = recentes.map(h => `
+  // Menor total por data de ida, para comparar e sinalizar as opções caras.
+  const menorPorData = {};
+  historico.forEach(h => {
+    const c = h.data_ida;
+    if (menorPorData[c] === undefined || h.preco_total_brl < menorPorData[c]) {
+      menorPorData[c] = h.preco_total_brl;
+    }
+  });
+
+  document.getElementById('table-body').innerHTML = recentes.map(h => {
+    const menor = menorPorData[h.data_ida] || h.preco_total_brl;
+    const acrescimo = (h.preco_total_brl - menor) / menor;
+    let selo;
+    if (acrescimo <= 0.001) {
+      selo = '<span class="tag tag-best">melhor</span>';
+    } else if (acrescimo > 0.30) {
+      selo = `<span class="tag tag-expensive">+${Math.round(acrescimo*100)}%</span>`;
+    } else {
+      selo = `<span class="tag tag-mid">+${Math.round(acrescimo*100)}%</span>`;
+    }
+    return `
     <tr>
       <td>${fmtData(h.data_busca)}</td>
       <td>${h.hub_nome || h.hub}</td>
       <td>${fmtData(h.data_ida)}</td>
-      <td>${fmtData(h.data_volta)}</td>
-      <td class="price-cell">${fmtBRL(h.preco_total_brl)}</td>
-    </tr>
-  `).join('');
+      <td>${fmtBRL(h.preco_internacional_brl)}</td>
+      <td>${h.preco_domestico_brl ? fmtBRL(h.preco_domestico_brl) : '—'}</td>
+      <td class="price-cell">${fmtBRL(h.preco_total_brl)} ${selo}</td>
+    </tr>`;
+  }).join('');
 }
 
 carregarDados();

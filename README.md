@@ -122,17 +122,28 @@ for um problema, me avisa que a gente troca a abordagem para algo com senha).
 Tudo que você provavelmente vai querer mexer está no topo do
 `buscar_passagens.py`, na seção `CONFIGURAÇÃO`:
 
-- `HUBS`: dicionário dos hubs monitorados (código IATA → nome). Já vem com
-  Fortaleza, Belém e Brasília; é só adicionar/remover linhas para mudar.
-- `DATAS_IDA`: lista de datas de ida testadas em janeiro/2027. Cada data =
-  1 busca por hub, então quanto mais datas, mais gasta da cota (250/mês).
+- `HUBS`: dicionário dos hubs monitorados (código IATA → nome). Vem com
+  Fortaleza, Belém, Brasília e São Paulo (GRU).
+- `MONITORAR_DOMESTICO`: liga/desliga a busca da perna Teresina → hub. Com
+  ela ligada, o painel mostra o total porta a porta (doméstico + internacional).
+- `DATA_DOMESTICA_IDA` / `DATA_DOMESTICA_VOLTA`: datas do voo Teresina → hub
+  (a perna doméstica é buscada 1 vez por hub, não por data internacional,
+  para economizar cota).
+- `DATAS_IDA`: lista de datas de ida internacionais testadas. Cada data =
+  1 busca por hub.
 - `DURACAO_VIAGEM_DIAS`: quantos dias de viagem (define a data de volta).
 - `ADULTOS` / `CRIANCAS`: composição do grupo (já em 2 e 2).
-- `TETO_PRECO_BRL`: preço total do grupo abaixo do qual você quer o alerta
-  por email. Rode o workflow manualmente uma vez e veja os valores reais no
-  histórico para calibrar.
-- `DESTINO`: pode trocar `MCO` (Orlando Intl.) por `MIA` (Miami) para
-  comparar — às vezes é mais barato voar até Miami e seguir para Orlando.
+- `TETO_PRECO_BRL`: preço total do grupo (porta a porta) abaixo do qual você
+  quer o alerta por email. Está em R$ 20.000; ajuste conforme os valores reais.
+- `DESTINO`: pode trocar `MCO` (Orlando) por `MIA` (Miami) para comparar.
+
+**Consumo da cota (250 buscas/mês grátis) — configuração atual:**
+- 5 origens (THE direto + FOR/BEL/BSB/GRU) × 3 datas = 15 buscas por execução
+- Doméstico desligado (`MONITORAR_DOMESTICO = False`) — os preços THE→hub
+  variam pouco; use os valores de referência já coletados no histórico
+- Agendamento: **dia sim/dia não** (cron `0 12 */2 * *`) → ~225 buscas/mês,
+  dentro das 250 grátis com folga
+- Se religar o doméstico ou voltar pra diário, refaça a conta pra não estourar
 
 ## Ver o histórico de preços
 
@@ -147,8 +158,8 @@ hub e por data — isso ajuda a decidir a melhor hora de comprar.
   (3 hubs × 3 datas = 9/dia) passa um pouco disso ao longo do mês; reduza
   `DATAS_IDA` para 2 datas, ou rode dia sim/dia não, se quiser ficar 100%
   dentro do grátis.
-- **Falta a perna Teresina → hub.** O preço mostrado é só do trecho
-  hub → Orlando. Some o voo Teresina → hub e confira se os horários casam
-  antes de comprar (essa perna entra numa próxima etapa).
+- **Dois trechos separados.** O total soma Teresina → hub + hub → Orlando,
+  comprados separadamente. Confira se os horários das conexões casam antes de
+  comprar (o robô soma preços, mas não valida se dá tempo entre um voo e outro).
 - **Não compra a passagem.** Ele só avisa. O preço vem do Google Flights;
   confirme no site da companhia (datas e passageiros exatos) antes de fechar.

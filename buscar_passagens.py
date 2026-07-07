@@ -62,9 +62,10 @@ HUBS = {
 ADULTOS = 2
 CRIANCAS = 2
 
-# Datas de ida testadas dentro de janeiro/2027, com volta ~DURACAO dias depois.
-# Cada data testada = 1 busca por hub (trecho internacional).
-DATAS_IDA = ["2027-01-05", "2027-01-10", "2027-01-15"]
+# Datas de ida testadas, com volta ~DURACAO dias depois.
+# Período alvo: ~10 dias na SEGUNDA SEMANA de janeiro/2027, então as idas
+# testadas se concentram na faixa 08-12/01 (voltas caem entre 18 e 22/01).
+DATAS_IDA = ["2027-01-08", "2027-01-10", "2027-01-12"]
 DURACAO_VIAGEM_DIAS = 10
 
 # --- Perna doméstica Teresina -> hub -----------------------------------------
@@ -73,7 +74,17 @@ DURACAO_VIAGEM_DIAS = 10
 # datas de referência abaixo -- basta trocar aqui se quiser outro dia.
 # Ida doméstica: 1 dia antes da 1ª data internacional. Volta doméstica: 1 dia
 # depois do retorno internacional. Ajuste conforme sua logística real.
-MONITORAR_DOMESTICO = True
+MONITORAR_DOMESTICO = False
+# Com o monitoramento doméstico desligado, usamos estes valores de REFERÊNCIA
+# (coletados na busca real de 07/07/2026) para manter o total porta a porta
+# comparável com o THE direto, sem gastar cota. Atualize de vez em quando
+# rodando uma vez com MONITORAR_DOMESTICO = True, ou conferindo manualmente.
+DOMESTICO_REFERENCIA = {
+    "FOR": 7878.0,
+    "BEL": 8496.0,
+    "BSB": 6670.0,
+    "GRU": 8125.0,
+}
 DATA_DOMESTICA_IDA = "2027-01-04"    # Teresina -> hub (véspera do voo internacional)
 DATA_DOMESTICA_VOLTA = "2027-01-26"  # hub -> Teresina (dia seguinte ao retorno)
 
@@ -197,6 +208,12 @@ def main():
                 domestico_por_hub[origem_hub] = preco_dom
 
     # 2) Trecho internacional hub -> Orlando, por data, somando o doméstico.
+    #    Se o monitoramento doméstico está desligado, usa os valores de
+    #    referência fixos (sem gastar cota) pra manter o total comparável.
+    if not MONITORAR_DOMESTICO:
+        domestico_por_hub = dict(DOMESTICO_REFERENCIA)
+        print("--- Perna doméstica: usando valores de REFERÊNCIA (sem busca) ---")
+
     print("--- Trecho internacional (hub -> Orlando) + total ---")
     novos_registros = []
     for origem_hub, nome_hub in HUBS.items():

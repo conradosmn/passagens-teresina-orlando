@@ -2,8 +2,10 @@ name: Busca diária de passagens Teresina -> Orlando
 
 on:
   schedule:
-    # Roda todo dia às 09:00 (horário de Brasília, UTC-3) => 12:00 UTC
-    - cron: "0 12 * * *"
+    # Roda dia sim/dia não às 09:00 (horário de Brasília, UTC-3) => 12:00 UTC.
+    # "*/2" no campo do dia = dias 1, 3, 5, 7... do mês. Com 15 buscas por
+    # execução, dá ~225/mês -- dentro das 250 buscas grátis do SerpApi.
+    - cron: "0 12 */2 * *"
   workflow_dispatch: {}   # permite rodar manualmente pela aba "Actions" no GitHub
 
 permissions:
