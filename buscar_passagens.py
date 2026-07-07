@@ -49,6 +49,7 @@ HUBS = {
     "FOR": "Fortaleza",
     "BEL": "Belém",
     "BSB": "Brasília",
+    "GRU": "São Paulo (TESTE)",
 }
 
 # Passageiros
