@@ -44,12 +44,18 @@ from email.mime.text import MIMEText
 
 DESTINO = "MCO"      # Orlando (Orlando Intl.) -- pode trocar p/ "MIA" se quiser comparar
 
+ORIGEM_DOMESTICA = "THE"   # Teresina -- de onde sai a perna doméstica até o hub
+
 # Hubs de partida rumo a Orlando (código IATA: nome amigável).
+# THE (Teresina direto) é um teste: o Google Flights monta as conexões
+# sozinho (via FOR/BSB/GRU etc.) num bilhete só, com horários que casam.
+# Se der bom resultado, pode aposentar a lógica de somar trechos separados.
 HUBS = {
+    "THE": "Teresina (direto/conexão auto)",
     "FOR": "Fortaleza",
     "BEL": "Belém",
     "BSB": "Brasília",
-    "GRU": "São Paulo (TESTE)",
+    "GRU": "São Paulo",
 }
 
 # Passageiros
@@ -57,14 +63,24 @@ ADULTOS = 2
 CRIANCAS = 2
 
 # Datas de ida testadas dentro de janeiro/2027, com volta ~DURACAO dias depois.
-# Cada data testada = 1 busca por hub. Mantenha a lista enxuta pra não gastar
-# a cota gratuita à toa (nº de buscas/dia = len(HUBS) x len(DATAS_IDA)).
+# Cada data testada = 1 busca por hub (trecho internacional).
 DATAS_IDA = ["2027-01-05", "2027-01-10", "2027-01-15"]
 DURACAO_VIAGEM_DIAS = 10
 
-# Teto de preço (BRL) para disparar o alerta por email (preço total do grupo).
+# --- Perna doméstica Teresina -> hub -----------------------------------------
+# Buscar a perna doméstica dobra o consumo de buscas. Para economizar cota,
+# ela é buscada UMA vez por hub (não uma por data internacional), usando as
+# datas de referência abaixo -- basta trocar aqui se quiser outro dia.
+# Ida doméstica: 1 dia antes da 1ª data internacional. Volta doméstica: 1 dia
+# depois do retorno internacional. Ajuste conforme sua logística real.
+MONITORAR_DOMESTICO = True
+DATA_DOMESTICA_IDA = "2027-01-04"    # Teresina -> hub (véspera do voo internacional)
+DATA_DOMESTICA_VOLTA = "2027-01-26"  # hub -> Teresina (dia seguinte ao retorno)
+
+# Teto de preço (BRL) para disparar o alerta por email (preço total do grupo,
+# considerando internacional + doméstico quando este está ativo).
 # Lembre de manter o mesmo valor em docs/index.html (TETO_PRECO no JS).
-TETO_PRECO_BRL = 12000.00
+TETO_PRECO_BRL = 20000.00
 
 HIST_PATH = os.path.join(os.path.dirname(__file__), "docs", "data", "historico.json")
 
@@ -74,7 +90,7 @@ SERPAPI_URL = "https://serpapi.com/search"
 # GOOGLE FLIGHTS (via SerpApi)
 # ---------------------------------------------------------------------------
 
-def buscar_voo(origem, data_ida, data_volta):
+def buscar_voo(origem, destino, data_ida, data_volta):
     """
     Consulta o Google Flights para uma rota/data específica e devolve o menor
     preço encontrado (total do grupo, em BRL) ou None se não houver resultado.
@@ -82,7 +98,7 @@ def buscar_voo(origem, data_ida, data_volta):
     params = {
         "engine": "google_flights",
         "departure_id": origem,
-        "arrival_id": DESTINO,
+        "arrival_id": destino,
         "outbound_date": data_ida,
         "return_date": data_volta,
         "adults": ADULTOS,
@@ -97,11 +113,11 @@ def buscar_voo(origem, data_ida, data_volta):
     try:
         resp = requests.get(SERPAPI_URL, params=params, timeout=60)
     except requests.RequestException as e:
-        print(f"  [aviso] {origem} {data_ida}: erro de rede: {e}")
+        print(f"  [aviso] {origem}->{destino} {data_ida}: erro de rede: {e}")
         return None
 
     if resp.status_code != 200:
-        print(f"  [aviso] {origem} {data_ida}: HTTP {resp.status_code}: {resp.text[:200]}")
+        print(f"  [aviso] {origem}->{destino} {data_ida}: HTTP {resp.status_code}: {resp.text[:200]}")
         return None
 
     dados = resp.json()
@@ -163,27 +179,54 @@ def main():
     historico = carregar_historico()
     hoje = date.today().isoformat()
 
+    # 1) Perna doméstica Teresina -> hub: 1 busca por hub (economiza cota).
+    #    Guardamos o preço doméstico de cada hub para somar depois.
+    domestico_por_hub = {}
+    if MONITORAR_DOMESTICO:
+        print("--- Perna doméstica (Teresina -> hub) ---")
+        for origem_hub, nome_hub in HUBS.items():
+            if origem_hub == ORIGEM_DOMESTICA:
+                continue  # THE direto não tem perna doméstica (é a própria origem)
+            preco_dom = buscar_voo(ORIGEM_DOMESTICA, origem_hub,
+                                   DATA_DOMESTICA_IDA, DATA_DOMESTICA_VOLTA)
+            time.sleep(1)
+            if preco_dom is None:
+                print(f"Teresina -> {nome_hub} ({origem_hub}): sem resultado.")
+            else:
+                print(f"Teresina -> {nome_hub} ({origem_hub}): R$ {preco_dom:.2f}")
+                domestico_por_hub[origem_hub] = preco_dom
+
+    # 2) Trecho internacional hub -> Orlando, por data, somando o doméstico.
+    print("--- Trecho internacional (hub -> Orlando) + total ---")
     novos_registros = []
-    for origem, nome_hub in HUBS.items():
+    for origem_hub, nome_hub in HUBS.items():
         for data_ida in DATAS_IDA:
             di = date.fromisoformat(data_ida)
             data_volta = (di + timedelta(days=DURACAO_VIAGEM_DIAS)).isoformat()
 
-            preco = buscar_voo(origem, data_ida, data_volta)
-            time.sleep(1)  # respiro entre chamadas
+            preco_intl = buscar_voo(origem_hub, DESTINO, data_ida, data_volta)
+            time.sleep(1)
 
-            if preco is None:
-                print(f"{nome_hub} ({origem}) {data_ida}: sem resultado.")
+            if preco_intl is None:
+                print(f"{nome_hub} ({origem_hub}) {data_ida}: sem resultado internacional.")
                 continue
 
-            print(f"{nome_hub} ({origem}) {data_ida} -> {data_volta}: R$ {preco:.2f}")
+            preco_dom = domestico_por_hub.get(origem_hub)  # pode ser None
+            preco_total = preco_intl + (preco_dom or 0.0)
+
+            dom_txt = f" + dom R$ {preco_dom:.2f}" if preco_dom else " (sem doméstico)"
+            print(f"{nome_hub} ({origem_hub}) {data_ida} -> {data_volta}: "
+                  f"intl R$ {preco_intl:.2f}{dom_txt} = total R$ {preco_total:.2f}")
+
             novos_registros.append({
                 "data_busca": hoje,
-                "hub": origem,
+                "hub": origem_hub,
                 "hub_nome": nome_hub,
                 "data_ida": data_ida,
                 "data_volta": data_volta,
-                "preco_total_brl": preco,
+                "preco_internacional_brl": preco_intl,
+                "preco_domestico_brl": preco_dom,   # None se não monitorado/sem dado
+                "preco_total_brl": preco_total,     # total porta a porta (ou só intl)
                 "fonte": "google_flights_serpapi",
             })
 
@@ -197,26 +240,37 @@ def main():
     historico.extend(novos_registros)
     salvar_historico(historico)
 
-    print(f"\nMais barato hoje: R$ {mais_barato['preco_total_brl']:.2f} "
+    dom = mais_barato.get("preco_domestico_brl")
+    detalhe_dom = (f"  (internacional R$ {mais_barato['preco_internacional_brl']:.2f} "
+                   f"+ Teresina->{mais_barato['hub_nome']} R$ {dom:.2f})") if dom else \
+                  "  (só trecho internacional; doméstico sem dado)"
+
+    print(f"\nMais barato hoje (porta a porta): R$ {mais_barato['preco_total_brl']:.2f} "
           f"via {mais_barato['hub_nome']} ({mais_barato['hub']}), "
           f"{mais_barato['data_ida']} -> {mais_barato['data_volta']}")
+    print(detalhe_dom)
 
     if mais_barato["preco_total_brl"] <= TETO_PRECO_BRL:
+        linha_dom = (f"  - Teresina -> {mais_barato['hub_nome']}: R$ {dom:.2f}\n"
+                     if dom else
+                     "  - Teresina -> hub: sem dado hoje (some manualmente)\n")
         corpo = (
-            f"Achei uma passagem rumo a Orlando abaixo do teto de "
+            f"Achei uma combinação rumo a Orlando abaixo do teto de "
             f"R$ {TETO_PRECO_BRL:.2f} (preço total, 2 adultos + 2 crianças)!\n\n"
-            f"Melhor hub hoje: {mais_barato['hub_nome']} ({mais_barato['hub']}) -> Orlando\n"
-            f"Preço total do grupo: R$ {mais_barato['preco_total_brl']:.2f}\n"
-            f"Ida: {mais_barato['data_ida']}\n"
-            f"Volta: {mais_barato['data_volta']}\n\n"
-            f"Lembre: falta a perna Teresina -> {mais_barato['hub_nome']}, que ainda "
-            f"não é monitorada. Some esse trecho e confira se os horários casam "
-            f"antes de comprar.\n\n"
-            f"Preço lido do Google Flights via SerpApi. Confirme no site da "
-            f"companhia antes de fechar.\n"
+            f"Melhor rota hoje: Teresina -> {mais_barato['hub_nome']} "
+            f"({mais_barato['hub']}) -> Orlando\n\n"
+            f"Total porta a porta: R$ {mais_barato['preco_total_brl']:.2f}\n"
+            f"  - {mais_barato['hub_nome']} -> Orlando: "
+            f"R$ {mais_barato['preco_internacional_brl']:.2f}\n"
+            f"{linha_dom}\n"
+            f"Ida (internacional): {mais_barato['data_ida']}\n"
+            f"Volta (internacional): {mais_barato['data_volta']}\n\n"
+            f"Preços lidos do Google Flights via SerpApi (trechos comprados "
+            f"separadamente). Confira se os horários das conexões casam e "
+            f"confirme no site da companhia antes de fechar.\n"
             f"(Busca automática rodada em {hoje} via GitHub Actions)"
         )
-        enviar_email("✈️ Passagem boa rumo a Orlando!", corpo)
+        enviar_email("✈️ Combinação boa Teresina -> Orlando!", corpo)
         print("Email de alerta enviado.")
     else:
         print("Preço ainda acima do teto definido. Nenhum email enviado.")
