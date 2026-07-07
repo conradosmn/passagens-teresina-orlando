@@ -1,10 +1,5 @@
 [
-  {"data_busca":"2026-07-05","hub":"FOR","hub_nome":"Fortaleza","data_ida":"2027-01-05","preco_adulto_brl":3200.0,"preco_estimado_familia_brl":11200.0,"fonte":"travelpayouts_cache"},
-  {"data_busca":"2026-07-05","hub":"BEL","hub_nome":"Belém","data_ida":"2027-01-05","preco_adulto_brl":3450.0,"preco_estimado_familia_brl":12075.0,"fonte":"travelpayouts_cache"},
-  {"data_busca":"2026-07-05","hub":"BSB","hub_nome":"Brasília","data_ida":"2027-01-06","preco_adulto_brl":2950.0,"preco_estimado_familia_brl":10325.0,"fonte":"travelpayouts_cache"},
-  {"data_busca":"2026-07-06","hub":"FOR","hub_nome":"Fortaleza","data_ida":"2027-01-05","preco_adulto_brl":3100.0,"preco_estimado_familia_brl":10850.0,"fonte":"travelpayouts_cache"},
-  {"data_busca":"2026-07-06","hub":"BSB","hub_nome":"Brasília","data_ida":"2027-01-06","preco_adulto_brl":3050.0,"preco_estimado_familia_brl":10675.0,"fonte":"travelpayouts_cache"},
-  {"data_busca":"2026-07-07","hub":"FOR","hub_nome":"Fortaleza","data_ida":"2027-01-08","preco_adulto_brl":2980.0,"preco_estimado_familia_brl":10430.0,"fonte":"travelpayouts_cache"},
-  {"data_busca":"2026-07-07","hub":"BEL","hub_nome":"Belém","data_ida":"2027-01-07","preco_adulto_brl":3300.0,"preco_estimado_familia_brl":11550.0,"fonte":"travelpayouts_cache"},
-  {"data_busca":"2026-07-07","hub":"BSB","hub_nome":"Brasília","data_ida":"2027-01-06","preco_adulto_brl":2890.0,"preco_estimado_familia_brl":10115.0,"fonte":"travelpayouts_cache"}
+  {"data_busca":"2026-07-07","hub":"FOR","hub_nome":"Fortaleza","data_ida":"2027-01-05","data_volta":"2027-01-15","preco_total_brl":11840.0,"fonte":"google_flights_serpapi"},
+  {"data_busca":"2026-07-07","hub":"BEL","hub_nome":"Belém","data_ida":"2027-01-05","data_volta":"2027-01-15","preco_total_brl":12960.0,"fonte":"google_flights_serpapi"},
+  {"data_busca":"2026-07-07","hub":"BSB","hub_nome":"Brasília","data_ida":"2027-01-10","data_volta":"2027-01-20","preco_total_brl":10990.0,"fonte":"google_flights_serpapi"}
 ]

@@ -61,7 +61,7 @@
     overflow: hidden;
   }
   .board::before {
-    content: 'MENOR ESTIMATIVA (2 ADT + 2 CHD)';
+    content: 'MENOR PREÇO (2 ADT + 2 CHD)';
     font-family: 'IBM Plex Mono', monospace;
     font-size: 11px;
     letter-spacing: 0.15em;
@@ -200,7 +200,7 @@
 <div class="wrap">
   <p class="eyebrow">Busca automática · roda todo dia</p>
   <h1>Rumo a Orlando</h1>
-  <p class="subtitle">estimativa 2 adultos + 2 crianças · janeiro de 2027 · hubs FOR / BEL / BSB · indicador via Travelpayouts</p>
+  <p class="subtitle">preço real 2 adultos + 2 crianças · janeiro de 2027 · hubs FOR / BEL / BSB · Google Flights via SerpApi</p>
 
   <div class="board">
     <div class="flap-row">
@@ -229,14 +229,14 @@
       <div class="stat-value" id="stat-updated">--</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">Menor estimativa já vista</div>
+      <div class="stat-label">Menor preço já visto</div>
       <div class="stat-value" id="stat-min">--</div>
     </div>
   </div>
 
   <div class="panel">
-    <p class="panel-title">Evolução da menor estimativa por dia de busca</p>
-    <p class="panel-sub">Uma linha por hub — a menor estimativa de total da família naquele hub, por dia de busca</p>
+    <p class="panel-title">Evolução do menor preço por dia de busca</p>
+    <p class="panel-sub">Uma linha por hub — o menor preço total (2 adt + 2 chd) daquele hub, por dia de busca</p>
     <canvas id="chartHistorico"></canvas>
   </div>
 
@@ -246,7 +246,7 @@
     <div style="overflow-x:auto;">
       <table>
         <thead>
-          <tr><th>Busca</th><th>Hub</th><th>Ida</th><th>Base 1 adt</th><th>Estimativa família</th></tr>
+          <tr><th>Busca</th><th>Hub</th><th>Ida</th><th>Volta</th><th>Preço total</th></tr>
         </thead>
         <tbody id="table-body"></tbody>
       </table>
@@ -295,19 +295,19 @@ const TETO_PRECO = 12000; // mantenha igual ao TETO_PRECO_BRL do buscar_passagen
 const CORES_HUB = { FOR: '#F2A340', BEL: '#3FBFAE', BSB: '#C58BF2' };
 
 function renderizar(historico) {
-  const ordenado = [...historico].sort((a, b) => a.preco_estimado_familia_brl - b.preco_estimado_familia_brl);
+  const ordenado = [...historico].sort((a, b) => a.preco_total_brl - b.preco_total_brl);
   const maisBarato = ordenado[0];
 
-  document.getElementById('flap-price').textContent = fmtBRL(maisBarato.preco_estimado_familia_brl);
+  document.getElementById('flap-price').textContent = fmtBRL(maisBarato.preco_total_brl);
   document.getElementById('flap-price').classList.remove('loading');
-  document.getElementById('flap-ida').textContent = fmtData(maisBarato.data_ida);
+  document.getElementById('flap-ida').textContent = fmtData(maisBarato.data_ida) + ' → ' + fmtData(maisBarato.data_volta);
   document.getElementById('flap-volta').textContent = (maisBarato.hub_nome || maisBarato.hub) + ' → Orlando';
-  document.getElementById('flap-cia').textContent = 'base 1 adt: ' + fmtBRL(maisBarato.preco_adulto_brl);
+  document.getElementById('flap-cia').textContent = 'ida e volta · econômica';
 
   const pill = document.getElementById('status-pill');
   const pillText = document.getElementById('status-text');
   pill.style.display = 'inline-flex';
-  if (maisBarato.preco_estimado_familia_brl <= TETO_PRECO) {
+  if (maisBarato.preco_total_brl <= TETO_PRECO) {
     pill.className = 'status-pill below';
     pillText.textContent = `abaixo do teto de ${fmtBRL(TETO_PRECO)}`;
   } else {
@@ -318,16 +318,16 @@ function renderizar(historico) {
   const datasBusca = [...new Set(historico.map(h => h.data_busca))].sort();
   document.getElementById('stat-total').textContent = datasBusca.length;
   document.getElementById('stat-updated').textContent = fmtData(datasBusca[datasBusca.length - 1]);
-  document.getElementById('stat-min').textContent = fmtBRL(maisBarato.preco_estimado_familia_brl);
+  document.getElementById('stat-min').textContent = fmtBRL(maisBarato.preco_total_brl);
 
-  // Uma série por hub: menor estimativa daquele hub em cada dia de busca
+  // Uma série por hub: menor preço daquele hub em cada dia de busca
   const hubs = [...new Set(historico.map(h => h.hub))];
   const datasets = hubs.map(hub => {
     const registrosHub = historico.filter(h => h.hub === hub);
     const nome = (registrosHub[0] && registrosHub[0].hub_nome) || hub;
     const dados = datasBusca.map(data => {
       const doDia = registrosHub.filter(h => h.data_busca === data);
-      return doDia.length ? Math.min(...doDia.map(h => h.preco_estimado_familia_brl)) : null;
+      return doDia.length ? Math.min(...doDia.map(h => h.preco_total_brl)) : null;
     });
     const cor = CORES_HUB[hub] || '#8792A8';
     return {
@@ -369,8 +369,8 @@ function renderizar(historico) {
       <td>${fmtData(h.data_busca)}</td>
       <td>${h.hub_nome || h.hub}</td>
       <td>${fmtData(h.data_ida)}</td>
-      <td>${fmtBRL(h.preco_adulto_brl)}</td>
-      <td class="price-cell">${fmtBRL(h.preco_estimado_familia_brl)}</td>
+      <td>${fmtData(h.data_volta)}</td>
+      <td class="price-cell">${fmtBRL(h.preco_total_brl)}</td>
     </tr>
   `).join('');
 }
