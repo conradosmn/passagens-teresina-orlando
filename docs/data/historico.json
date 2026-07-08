@@ -880,5 +880,871 @@
       "duracao_total_min": 1290
     },
     "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "GRU",
+    "hub_nome": "São Paulo",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_internacional_brl": 15913.0,
+    "preco_domestico_brl": 8125.0,
+    "preco_total_brl": 24038.0,
+    "preco_medio_passageiro_brl": 6009.5,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "GRU",
+          "de_nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "partida": "2027-01-10 17:25",
+          "para": "BOG",
+          "para_nome": "El Dorado International Airport",
+          "chegada": "2027-01-10 21:25",
+          "cia": "Avianca",
+          "voo": "AV 184",
+          "duracao_min": 360
+        },
+        {
+          "de": "BOG",
+          "de_nome": "El Dorado International Airport",
+          "partida": "2027-01-11 04:00",
+          "para": "SAL",
+          "para_nome": "El Salvador International Airport Saint Óscar Arnulfo Romero y Galdámez",
+          "chegada": "2027-01-11 06:15",
+          "cia": "Avianca",
+          "voo": "AV 366",
+          "duracao_min": 195
+        },
+        {
+          "de": "SAL",
+          "de_nome": "El Salvador International Airport Saint Óscar Arnulfo Romero y Galdámez",
+          "partida": "2027-01-11 08:45",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-11 12:40",
+          "cia": "Avianca",
+          "voo": "AV 422",
+          "duracao_min": 175
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "BOG",
+          "nome": "El Dorado International Airport",
+          "duracao_min": 395
+        },
+        {
+          "aeroporto": "SAL",
+          "nome": "El Salvador International Airport Saint Óscar Arnulfo Romero y Galdámez",
+          "duracao_min": 150
+        }
+      ],
+      "duracao_total_min": 1275
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "GRU",
+    "hub_nome": "São Paulo",
+    "data_ida": "2027-01-12",
+    "data_volta": "2027-01-22",
+    "preco_internacional_brl": 19204.0,
+    "preco_domestico_brl": 8125.0,
+    "preco_total_brl": 27329.0,
+    "preco_medio_passageiro_brl": 6832.25,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "GRU",
+          "de_nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "partida": "2027-01-12 17:25",
+          "para": "BOG",
+          "para_nome": "El Dorado International Airport",
+          "chegada": "2027-01-12 21:25",
+          "cia": "Avianca",
+          "voo": "AV 184",
+          "duracao_min": 360
+        },
+        {
+          "de": "BOG",
+          "de_nome": "El Dorado International Airport",
+          "partida": "2027-01-13 04:00",
+          "para": "SAL",
+          "para_nome": "El Salvador International Airport Saint Óscar Arnulfo Romero y Galdámez",
+          "chegada": "2027-01-13 06:15",
+          "cia": "Avianca",
+          "voo": "AV 366",
+          "duracao_min": 195
+        },
+        {
+          "de": "SAL",
+          "de_nome": "El Salvador International Airport Saint Óscar Arnulfo Romero y Galdámez",
+          "partida": "2027-01-13 08:45",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-13 12:40",
+          "cia": "Avianca",
+          "voo": "AV 422",
+          "duracao_min": 175
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "BOG",
+          "nome": "El Dorado International Airport",
+          "duracao_min": 395
+        },
+        {
+          "aeroporto": "SAL",
+          "nome": "El Salvador International Airport Saint Óscar Arnulfo Romero y Galdámez",
+          "duracao_min": 150
+        }
+      ],
+      "duracao_total_min": 1275
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "BSB",
+    "hub_nome": "Brasília",
+    "data_ida": "2027-01-12",
+    "data_volta": "2027-01-22",
+    "preco_internacional_brl": 23766.0,
+    "preco_domestico_brl": 6670.0,
+    "preco_total_brl": 30436.0,
+    "preco_medio_passageiro_brl": 7609.0,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "BSB",
+          "de_nome": "Aeroporto Internacional de Brasília - Presidente Juscelino Kubitschek",
+          "partida": "2027-01-12 20:30",
+          "para": "GRU",
+          "para_nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "chegada": "2027-01-12 22:20",
+          "cia": "LATAM",
+          "voo": "LA 4622",
+          "duracao_min": 110
+        },
+        {
+          "de": "GRU",
+          "de_nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "partida": "2027-01-12 23:55",
+          "para": "BOG",
+          "para_nome": "El Dorado International Airport",
+          "chegada": "2027-01-13 04:00",
+          "cia": "LATAM",
+          "voo": "LA 8212",
+          "duracao_min": 365
+        },
+        {
+          "de": "BOG",
+          "de_nome": "El Dorado International Airport",
+          "partida": "2027-01-13 10:35",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-13 14:50",
+          "cia": "LATAM",
+          "voo": "LA 4408",
+          "duracao_min": 255
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "duracao_min": 95
+        },
+        {
+          "aeroporto": "BOG",
+          "nome": "El Dorado International Airport",
+          "duracao_min": 395
+        }
+      ],
+      "duracao_total_min": 1220
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "BSB",
+    "hub_nome": "Brasília",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_internacional_brl": 24811.0,
+    "preco_domestico_brl": 6670.0,
+    "preco_total_brl": 31481.0,
+    "preco_medio_passageiro_brl": 7870.25,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "BSB",
+          "de_nome": "Aeroporto Internacional de Brasília - Presidente Juscelino Kubitschek",
+          "partida": "2027-01-10 21:00",
+          "para": "MAO",
+          "para_nome": "Aeroporto Internacional de Manaus - Eduardo Gomes",
+          "chegada": "2027-01-10 23:05",
+          "cia": "Gol",
+          "voo": "G3 1784",
+          "duracao_min": 185
+        },
+        {
+          "de": "MAO",
+          "de_nome": "Aeroporto Internacional de Manaus - Eduardo Gomes",
+          "partida": "2027-01-11 04:05",
+          "para": "BOG",
+          "para_nome": "El Dorado International Airport",
+          "chegada": "2027-01-11 06:00",
+          "cia": "Avianca",
+          "voo": "AV 82",
+          "duracao_min": 175
+        },
+        {
+          "de": "BOG",
+          "de_nome": "El Dorado International Airport",
+          "partida": "2027-01-11 08:00",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-11 12:10",
+          "cia": "Avianca",
+          "voo": "AV 28",
+          "duracao_min": 250
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "MAO",
+          "nome": "Aeroporto Internacional de Manaus - Eduardo Gomes",
+          "duracao_min": 300
+        },
+        {
+          "aeroporto": "BOG",
+          "nome": "El Dorado International Airport",
+          "duracao_min": 120
+        }
+      ],
+      "duracao_total_min": 1030
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "GRU",
+    "hub_nome": "São Paulo",
+    "data_ida": "2027-01-08",
+    "data_volta": "2027-01-18",
+    "preco_internacional_brl": 23386.0,
+    "preco_domestico_brl": 8125.0,
+    "preco_total_brl": 31511.0,
+    "preco_medio_passageiro_brl": 7877.75,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "GRU",
+          "de_nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "partida": "2027-01-08 03:10",
+          "para": "PTY",
+          "para_nome": "Aeroporto Internacional Tocumen",
+          "chegada": "2027-01-08 08:00",
+          "cia": "COPA",
+          "voo": "CM 702",
+          "duracao_min": 410
+        },
+        {
+          "de": "PTY",
+          "de_nome": "Aeroporto Internacional Tocumen",
+          "partida": "2027-01-08 09:30",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-08 13:01",
+          "cia": "COPA",
+          "voo": "CM 862",
+          "duracao_min": 211
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "PTY",
+          "nome": "Aeroporto Internacional Tocumen",
+          "duracao_min": 90
+        }
+      ],
+      "duracao_total_min": 711
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "THE",
+    "hub_nome": "Teresina (direto/conexão auto)",
+    "data_ida": "2027-01-12",
+    "data_volta": "2027-01-22",
+    "preco_internacional_brl": 31764.0,
+    "preco_domestico_brl": null,
+    "preco_total_brl": 31764.0,
+    "preco_medio_passageiro_brl": 7941.0,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "THE",
+          "de_nome": "Aeroporto de Teresina - Senador Petrônio Portela",
+          "partida": "2027-01-12 05:00",
+          "para": "BSB",
+          "para_nome": "Aeroporto Internacional de Brasília - Presidente Juscelino Kubitschek",
+          "chegada": "2027-01-12 07:15",
+          "cia": "Gol",
+          "voo": "G3 1753",
+          "duracao_min": 135
+        },
+        {
+          "de": "BSB",
+          "de_nome": "Aeroporto Internacional de Brasília - Presidente Juscelino Kubitschek",
+          "partida": "2027-01-12 09:15",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-12 15:30",
+          "cia": "Gol",
+          "voo": "G3 7634",
+          "duracao_min": 495
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "BSB",
+          "nome": "Aeroporto Internacional de Brasília - Presidente Juscelino Kubitschek",
+          "duracao_min": 120
+        }
+      ],
+      "duracao_total_min": 750
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "BSB",
+    "hub_nome": "Brasília",
+    "data_ida": "2027-01-08",
+    "data_volta": "2027-01-18",
+    "preco_internacional_brl": 27591.0,
+    "preco_domestico_brl": 6670.0,
+    "preco_total_brl": 34261.0,
+    "preco_medio_passageiro_brl": 8565.25,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "BSB",
+          "de_nome": "Aeroporto Internacional de Brasília - Presidente Juscelino Kubitschek",
+          "partida": "2027-01-08 02:00",
+          "para": "PTY",
+          "para_nome": "Aeroporto Internacional Tocumen",
+          "chegada": "2027-01-08 06:02",
+          "cia": "COPA",
+          "voo": "CM 204",
+          "duracao_min": 362
+        },
+        {
+          "de": "PTY",
+          "de_nome": "Aeroporto Internacional Tocumen",
+          "partida": "2027-01-08 09:10",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-08 12:41",
+          "cia": "COPA",
+          "voo": "CM 867",
+          "duracao_min": 211
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "PTY",
+          "nome": "Aeroporto Internacional Tocumen",
+          "duracao_min": 188
+        }
+      ],
+      "duracao_total_min": 761
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "FOR",
+    "hub_nome": "Fortaleza",
+    "data_ida": "2027-01-12",
+    "data_volta": "2027-01-22",
+    "preco_internacional_brl": 27914.0,
+    "preco_domestico_brl": 7878.0,
+    "preco_total_brl": 35792.0,
+    "preco_medio_passageiro_brl": 8948.0,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "FOR",
+          "de_nome": "Aeroporto Internacional de Fortaleza - Pinto Martins (FOR)",
+          "partida": "2027-01-12 17:00",
+          "para": "GIG",
+          "para_nome": "Aeroporto Internacional do Rio de Janeiro - Galeão – Antonio Carlos Jobim",
+          "chegada": "2027-01-12 20:20",
+          "cia": "Gol",
+          "voo": "G3 2055",
+          "duracao_min": 200
+        },
+        {
+          "de": "GIG",
+          "de_nome": "Aeroporto Internacional do Rio de Janeiro - Galeão – Antonio Carlos Jobim",
+          "partida": "2027-01-12 23:55",
+          "para": "MIA",
+          "para_nome": "Aeroporto Internacional de Miami",
+          "chegada": "2027-01-13 06:40",
+          "cia": "American",
+          "voo": "AA 904",
+          "duracao_min": 525
+        },
+        {
+          "de": "MIA",
+          "de_nome": "Aeroporto Internacional de Miami",
+          "partida": "2027-01-13 09:04",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-13 10:16",
+          "cia": "American",
+          "voo": "AA 2468",
+          "duracao_min": 72
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "GIG",
+          "nome": "Aeroporto Internacional do Rio de Janeiro - Galeão – Antonio Carlos Jobim",
+          "duracao_min": 215
+        },
+        {
+          "aeroporto": "MIA",
+          "nome": "Aeroporto Internacional de Miami",
+          "duracao_min": 144
+        }
+      ],
+      "duracao_total_min": 1156
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "BEL",
+    "hub_nome": "Belém",
+    "data_ida": "2027-01-12",
+    "data_volta": "2027-01-22",
+    "preco_internacional_brl": 28528.0,
+    "preco_domestico_brl": 8496.0,
+    "preco_total_brl": 37024.0,
+    "preco_medio_passageiro_brl": 9256.0,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "BEL",
+          "de_nome": "Aeroporto Internacional de Belém",
+          "partida": "2027-01-12 08:50",
+          "para": "BOG",
+          "para_nome": "El Dorado International Airport",
+          "chegada": "2027-01-12 11:15",
+          "cia": "Avianca",
+          "voo": "AV 170",
+          "duracao_min": 265
+        },
+        {
+          "de": "BOG",
+          "de_nome": "El Dorado International Airport",
+          "partida": "2027-01-12 22:25",
+          "para": "MDE",
+          "para_nome": "Aeroporto Internacional José María Córdova",
+          "chegada": "2027-01-12 23:35",
+          "cia": "Avianca",
+          "voo": "AV 9242",
+          "duracao_min": 70
+        },
+        {
+          "de": "MDE",
+          "de_nome": "Aeroporto Internacional José María Córdova",
+          "partida": "2027-01-13 06:35",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-13 10:35",
+          "cia": "Avianca",
+          "voo": "AV 202",
+          "duracao_min": 240
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "BOG",
+          "nome": "El Dorado International Airport",
+          "duracao_min": 670
+        },
+        {
+          "aeroporto": "MDE",
+          "nome": "Aeroporto Internacional José María Córdova",
+          "duracao_min": 420
+        }
+      ],
+      "duracao_total_min": 1665
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "THE",
+    "hub_nome": "Teresina (direto/conexão auto)",
+    "data_ida": "2027-01-08",
+    "data_volta": "2027-01-18",
+    "preco_internacional_brl": 37164.0,
+    "preco_domestico_brl": null,
+    "preco_total_brl": 37164.0,
+    "preco_medio_passageiro_brl": 9291.0,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "THE",
+          "de_nome": "Aeroporto de Teresina - Senador Petrônio Portela",
+          "partida": "2027-01-08 03:55",
+          "para": "GRU",
+          "para_nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "chegada": "2027-01-08 07:10",
+          "cia": "Gol",
+          "voo": "G3 1649",
+          "duracao_min": 195
+        },
+        {
+          "de": "GRU",
+          "de_nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "partida": "2027-01-08 11:10",
+          "para": "PTY",
+          "para_nome": "Aeroporto Internacional Tocumen",
+          "chegada": "2027-01-08 16:01",
+          "cia": "COPA",
+          "voo": "CM 700",
+          "duracao_min": 411
+        },
+        {
+          "de": "PTY",
+          "de_nome": "Aeroporto Internacional Tocumen",
+          "partida": "2027-01-08 18:45",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-08 22:22",
+          "cia": "COPA",
+          "voo": "CM 434",
+          "duracao_min": 217
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "duracao_min": 240
+        },
+        {
+          "aeroporto": "PTY",
+          "nome": "Aeroporto Internacional Tocumen",
+          "duracao_min": 164
+        }
+      ],
+      "duracao_total_min": 1227
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "FOR",
+    "hub_nome": "Fortaleza",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_internacional_brl": 29963.0,
+    "preco_domestico_brl": 7878.0,
+    "preco_total_brl": 37841.0,
+    "preco_medio_passageiro_brl": 9460.25,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "FOR",
+          "de_nome": "Aeroporto Internacional de Fortaleza - Pinto Martins (FOR)",
+          "partida": "2027-01-10 17:00",
+          "para": "GIG",
+          "para_nome": "Aeroporto Internacional do Rio de Janeiro - Galeão – Antonio Carlos Jobim",
+          "chegada": "2027-01-10 20:20",
+          "cia": "Gol",
+          "voo": "G3 2055",
+          "duracao_min": 200
+        },
+        {
+          "de": "GIG",
+          "de_nome": "Aeroporto Internacional do Rio de Janeiro - Galeão – Antonio Carlos Jobim",
+          "partida": "2027-01-10 23:55",
+          "para": "MIA",
+          "para_nome": "Aeroporto Internacional de Miami",
+          "chegada": "2027-01-11 06:40",
+          "cia": "American",
+          "voo": "AA 904",
+          "duracao_min": 525
+        },
+        {
+          "de": "MIA",
+          "de_nome": "Aeroporto Internacional de Miami",
+          "partida": "2027-01-11 09:04",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-11 10:16",
+          "cia": "American",
+          "voo": "AA 2468",
+          "duracao_min": 72
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "GIG",
+          "nome": "Aeroporto Internacional do Rio de Janeiro - Galeão – Antonio Carlos Jobim",
+          "duracao_min": 215
+        },
+        {
+          "aeroporto": "MIA",
+          "nome": "Aeroporto Internacional de Miami",
+          "duracao_min": 144
+        }
+      ],
+      "duracao_total_min": 1156
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "FOR",
+    "hub_nome": "Fortaleza",
+    "data_ida": "2027-01-08",
+    "data_volta": "2027-01-18",
+    "preco_internacional_brl": 32145.0,
+    "preco_domestico_brl": 7878.0,
+    "preco_total_brl": 40023.0,
+    "preco_medio_passageiro_brl": 10005.75,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "FOR",
+          "de_nome": "Aeroporto Internacional de Fortaleza - Pinto Martins (FOR)",
+          "partida": "2027-01-08 17:45",
+          "para": "GRU",
+          "para_nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "chegada": "2027-01-08 21:30",
+          "cia": "Gol",
+          "voo": "G3 1557",
+          "duracao_min": 225
+        },
+        {
+          "de": "GRU",
+          "de_nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "partida": "2027-01-09 03:10",
+          "para": "PTY",
+          "para_nome": "Aeroporto Internacional Tocumen",
+          "chegada": "2027-01-09 08:00",
+          "cia": "COPA",
+          "voo": "CM 702",
+          "duracao_min": 410
+        },
+        {
+          "de": "PTY",
+          "de_nome": "Aeroporto Internacional Tocumen",
+          "partida": "2027-01-09 09:10",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-09 12:41",
+          "cia": "COPA",
+          "voo": "CM 867",
+          "duracao_min": 211
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "duracao_min": 340
+        },
+        {
+          "aeroporto": "PTY",
+          "nome": "Aeroporto Internacional Tocumen",
+          "duracao_min": 70
+        }
+      ],
+      "duracao_total_min": 1256
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "BEL",
+    "hub_nome": "Belém",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_internacional_brl": 32003.0,
+    "preco_domestico_brl": 8496.0,
+    "preco_total_brl": 40499.0,
+    "preco_medio_passageiro_brl": 10124.75,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "BEL",
+          "de_nome": "Aeroporto Internacional de Belém",
+          "partida": "2027-01-10 20:10",
+          "para": "MAO",
+          "para_nome": "Aeroporto Internacional de Manaus - Eduardo Gomes",
+          "chegada": "2027-01-10 21:15",
+          "cia": "Azul",
+          "voo": "AD 4545",
+          "duracao_min": 125
+        },
+        {
+          "de": "MAO",
+          "de_nome": "Aeroporto Internacional de Manaus - Eduardo Gomes",
+          "partida": "2027-01-11 04:05",
+          "para": "BOG",
+          "para_nome": "El Dorado International Airport",
+          "chegada": "2027-01-11 06:00",
+          "cia": "Avianca",
+          "voo": "AV 82",
+          "duracao_min": 175
+        },
+        {
+          "de": "BOG",
+          "de_nome": "El Dorado International Airport",
+          "partida": "2027-01-11 08:00",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-11 12:10",
+          "cia": "Avianca",
+          "voo": "AV 28",
+          "duracao_min": 250
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "MAO",
+          "nome": "Aeroporto Internacional de Manaus - Eduardo Gomes",
+          "duracao_min": 410
+        },
+        {
+          "aeroporto": "BOG",
+          "nome": "El Dorado International Airport",
+          "duracao_min": 120
+        }
+      ],
+      "duracao_total_min": 1080
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "THE",
+    "hub_nome": "Teresina (direto/conexão auto)",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_internacional_brl": 40740.0,
+    "preco_domestico_brl": null,
+    "preco_total_brl": 40740.0,
+    "preco_medio_passageiro_brl": 10185.0,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "THE",
+          "de_nome": "Aeroporto de Teresina - Senador Petrônio Portela",
+          "partida": "2027-01-10 11:30",
+          "para": "GRU",
+          "para_nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "chegada": "2027-01-10 14:40",
+          "cia": "LATAM",
+          "voo": "LA 3843",
+          "duracao_min": 190
+        },
+        {
+          "de": "GRU",
+          "de_nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "partida": "2027-01-10 21:45",
+          "para": "YUL",
+          "para_nome": "Aeroporto Internacional Pierre Elliott Trudeau",
+          "chegada": "2027-01-11 06:10",
+          "cia": "Air Canada",
+          "voo": "AC 97",
+          "duracao_min": 625
+        },
+        {
+          "de": "YUL",
+          "de_nome": "Aeroporto Internacional Pierre Elliott Trudeau",
+          "partida": "2027-01-11 08:45",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-11 12:20",
+          "cia": "Air Canada",
+          "voo": "AC 1634",
+          "duracao_min": 215
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "duracao_min": 425
+        },
+        {
+          "aeroporto": "YUL",
+          "nome": "Aeroporto Internacional Pierre Elliott Trudeau",
+          "duracao_min": 155
+        }
+      ],
+      "duracao_total_min": 1610
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-08",
+    "hub": "BEL",
+    "hub_nome": "Belém",
+    "data_ida": "2027-01-08",
+    "data_volta": "2027-01-18",
+    "preco_internacional_brl": 37460.0,
+    "preco_domestico_brl": 8496.0,
+    "preco_total_brl": 45956.0,
+    "preco_medio_passageiro_brl": 11489.0,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "BEL",
+          "de_nome": "Aeroporto Internacional de Belém",
+          "partida": "2027-01-08 05:00",
+          "para": "BSB",
+          "para_nome": "Aeroporto Internacional de Brasília - Presidente Juscelino Kubitschek",
+          "chegada": "2027-01-08 07:40",
+          "cia": "Gol",
+          "voo": "G3 1733",
+          "duracao_min": 160
+        },
+        {
+          "de": "BSB",
+          "de_nome": "Aeroporto Internacional de Brasília - Presidente Juscelino Kubitschek",
+          "partida": "2027-01-08 09:15",
+          "para": "MCO",
+          "para_nome": "Aeroporto Internacional de Orlando",
+          "chegada": "2027-01-08 15:30",
+          "cia": "Gol",
+          "voo": "G3 7634",
+          "duracao_min": 495
+        }
+      ],
+      "layovers": [
+        {
+          "aeroporto": "BSB",
+          "nome": "Aeroporto Internacional de Brasília - Presidente Juscelino Kubitschek",
+          "duracao_min": 95
+        }
+      ],
+      "duracao_total_min": 750
+    },
+    "fonte": "google_flights_serpapi"
   }
 ]
