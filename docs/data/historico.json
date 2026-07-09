@@ -1746,5 +1746,179 @@
       "duracao_total_min": 750
     },
     "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-09",
+    "hub": "BSB",
+    "hub_nome": "Brasília",
+    "data_ida": "2027-01-08",
+    "data_volta": "2027-01-18",
+    "preco_internacional_brl": 24001.0,
+    "preco_domestico_brl": 6670.0,
+    "preco_total_brl": 30671.0,
+    "preco_medio_passageiro_brl": 7667.75,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "BSB",
+          "de_nome": "Aeroporto Internacional de Brasília - Presidente Juscelino Kubitschek",
+          "partida": "2027-01-08 09:40",
+          "para": "MIA",
+          "para_nome": "Aeroporto Internacional de Miami",
+          "chegada": "2027-01-08 15:35",
+          "cia": "Gol",
+          "voo": "G3 7748",
+          "duracao_min": 475
+        }
+      ],
+      "layovers": [],
+      "duracao_total_min": 475
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-09",
+    "hub": "BSB",
+    "hub_nome": "Brasília",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_internacional_brl": 24001.0,
+    "preco_domestico_brl": 6670.0,
+    "preco_total_brl": 30671.0,
+    "preco_medio_passageiro_brl": 7667.75,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "BSB",
+          "de_nome": "Aeroporto Internacional de Brasília - Presidente Juscelino Kubitschek",
+          "partida": "2027-01-10 09:40",
+          "para": "MIA",
+          "para_nome": "Aeroporto Internacional de Miami",
+          "chegada": "2027-01-10 15:35",
+          "cia": "Gol",
+          "voo": "G3 7748",
+          "duracao_min": 475
+        }
+      ],
+      "layovers": [],
+      "duracao_total_min": 475
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-09",
+    "hub": "BSB",
+    "hub_nome": "Brasília",
+    "data_ida": "2027-01-12",
+    "data_volta": "2027-01-22",
+    "preco_internacional_brl": 24001.0,
+    "preco_domestico_brl": 6670.0,
+    "preco_total_brl": 30671.0,
+    "preco_medio_passageiro_brl": 7667.75,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "BSB",
+          "de_nome": "Aeroporto Internacional de Brasília - Presidente Juscelino Kubitschek",
+          "partida": "2027-01-12 09:40",
+          "para": "MIA",
+          "para_nome": "Aeroporto Internacional de Miami",
+          "chegada": "2027-01-12 15:35",
+          "cia": "Gol",
+          "voo": "G3 7748",
+          "duracao_min": 475
+        }
+      ],
+      "layovers": [],
+      "duracao_total_min": 475
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-09",
+    "hub": "GRU",
+    "hub_nome": "São Paulo",
+    "data_ida": "2027-01-12",
+    "data_volta": "2027-01-22",
+    "preco_internacional_brl": 23274.0,
+    "preco_domestico_brl": 8125.0,
+    "preco_total_brl": 31399.0,
+    "preco_medio_passageiro_brl": 7849.75,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "GRU",
+          "de_nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "partida": "2027-01-12 12:55",
+          "para": "MIA",
+          "para_nome": "Aeroporto Internacional de Miami",
+          "chegada": "2027-01-12 19:05",
+          "cia": "LATAM",
+          "voo": "LA 8198",
+          "duracao_min": 490
+        }
+      ],
+      "layovers": [],
+      "duracao_total_min": 490
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-09",
+    "hub": "GRU",
+    "hub_nome": "São Paulo",
+    "data_ida": "2027-01-10",
+    "data_volta": "2027-01-20",
+    "preco_internacional_brl": 25254.0,
+    "preco_domestico_brl": 8125.0,
+    "preco_total_brl": 33379.0,
+    "preco_medio_passageiro_brl": 8344.75,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "GRU",
+          "de_nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "partida": "2027-01-10 10:15",
+          "para": "MIA",
+          "para_nome": "Aeroporto Internacional de Miami",
+          "chegada": "2027-01-10 16:35",
+          "cia": "LATAM",
+          "voo": "LA 8194",
+          "duracao_min": 500
+        }
+      ],
+      "layovers": [],
+      "duracao_total_min": 500
+    },
+    "fonte": "google_flights_serpapi"
+  },
+  {
+    "data_busca": "2026-07-09",
+    "hub": "GRU",
+    "hub_nome": "São Paulo",
+    "data_ida": "2027-01-08",
+    "data_volta": "2027-01-18",
+    "preco_internacional_brl": 29130.0,
+    "preco_domestico_brl": 8125.0,
+    "preco_total_brl": 37255.0,
+    "preco_medio_passageiro_brl": 9313.75,
+    "detalhes_ida": {
+      "segmentos": [
+        {
+          "de": "GRU",
+          "de_nome": "Aeroporto Internacional de São Paulo/Guarulhos–Governador André Franco Montoro",
+          "partida": "2027-01-08 00:05",
+          "para": "MIA",
+          "para_nome": "Aeroporto Internacional de Miami",
+          "chegada": "2027-01-08 06:50",
+          "cia": "American",
+          "voo": "AA 906",
+          "duracao_min": 525
+        }
+      ],
+      "layovers": [],
+      "duracao_total_min": 525
+    },
+    "fonte": "google_flights_serpapi"
   }
 ]
