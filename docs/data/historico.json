@@ -1774,7 +1774,8 @@
       "layovers": [],
       "duracao_total_min": 475
     },
-    "fonte": "google_flights_serpapi"
+    "fonte": "google_flights_serpapi",
+    "destino": "MIA"
   },
   {
     "data_busca": "2026-07-09",
@@ -1803,7 +1804,8 @@
       "layovers": [],
       "duracao_total_min": 475
     },
-    "fonte": "google_flights_serpapi"
+    "fonte": "google_flights_serpapi",
+    "destino": "MIA"
   },
   {
     "data_busca": "2026-07-09",
@@ -1832,7 +1834,8 @@
       "layovers": [],
       "duracao_total_min": 475
     },
-    "fonte": "google_flights_serpapi"
+    "fonte": "google_flights_serpapi",
+    "destino": "MIA"
   },
   {
     "data_busca": "2026-07-09",
@@ -1861,7 +1864,8 @@
       "layovers": [],
       "duracao_total_min": 490
     },
-    "fonte": "google_flights_serpapi"
+    "fonte": "google_flights_serpapi",
+    "destino": "MIA"
   },
   {
     "data_busca": "2026-07-09",
@@ -1890,7 +1894,8 @@
       "layovers": [],
       "duracao_total_min": 500
     },
-    "fonte": "google_flights_serpapi"
+    "fonte": "google_flights_serpapi",
+    "destino": "MIA"
   },
   {
     "data_busca": "2026-07-09",
@@ -1919,6 +1924,7 @@
       "layovers": [],
       "duracao_total_min": 525
     },
-    "fonte": "google_flights_serpapi"
+    "fonte": "google_flights_serpapi",
+    "destino": "MIA"
   }
 ]

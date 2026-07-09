@@ -374,6 +374,15 @@ async function carregarDados() {
     mostrarVazio();
     return;
   }
+  // Só considera registros da era Miami/voo direto (campo "destino"). Os
+  // registros antigos (pré-pivô, Orlando/MCO com conexão) não têm esse
+  // campo e ficam de fora -- senão o "menor preço" podia pescar um voo com
+  // escala rotulado como se fosse direto pra Miami.
+  historico = historico.filter(h => h.destino === 'MIA');
+  if (historico.length === 0) {
+    mostrarVazio();
+    return;
+  }
   // Erro ao DESENHAR não deve apagar o painel (senão o preço some).
   try {
     renderizar(historico);

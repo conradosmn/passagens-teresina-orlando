@@ -308,6 +308,10 @@ def main():
                 "hub_nome": nome_hub,
                 "data_ida": data_ida,
                 "data_volta": data_volta,
+                # Marca a era do registro (MIA/voo direto). Registros antigos
+                # (pré-pivô, Orlando/MCO com conexão) não têm este campo --
+                # o painel usa isso pra não misturar as duas eras no ranking.
+                "destino": DESTINO,
                 "preco_internacional_brl": preco_intl,
                 "preco_domestico_brl": preco_dom,   # None se não monitorado/sem dado
                 "preco_total_brl": preco_total,     # total porta a porta (ou só intl)
