@@ -1,14 +1,15 @@
-# Agente de busca diária: hubs → Orlando (jan/2027)
+# Agente de busca diária: hubs → Miami (jan/2027)
 
-Não existe voo Teresina → Orlando direto. Este agente roda **todo dia
-sozinho** (via GitHub Actions) e lê o **Google Flights** (através do SerpApi)
-para os trechos **Fortaleza → Orlando (FOR→MCO)**, **Belém → Orlando
-(BEL→MCO)** e **Brasília → Orlando (BSB→MCO)** em datas de janeiro/2027, para
-**2 adultos + 2 crianças**. Guarda o histórico e te manda um **email** quando
-o menor preço de algum hub cair abaixo do teto que você definir.
+Não existe voo Teresina → Miami direto. Este agente roda a cada 2 dias
+sozinho (via GitHub Actions) e lê o **Google Flights** (através do SerpApi)
+para os trechos **diretos** (sem escala) **Fortaleza → Miami (FOR→MIA)**,
+**Belém → Miami (BEL→MIA)**, **Brasília → Miami (BSB→MIA)** e **São Paulo →
+Miami (GRU→MIA)** em datas de janeiro/2027, para **2 adultos + 2 crianças**.
+Guarda o histórico e te manda um **email** quando o menor preço de algum hub
+cair abaixo do teto que você definir.
 
 O preço é o **real do Google Flights** para o grupo exato — não é estimativa.
-Cobre voo casado (conexões) e horários reais.
+Só considera voos diretos e traz horários reais.
 
 A perna **Teresina → hub** ainda não é monitorada (fica pra uma próxima
 etapa). Por ora, quando um hub ficar bom, você soma o trecho de Teresina e
@@ -55,10 +56,9 @@ Testamos quatro opções, nesta ordem de descarte:
    letras/números.
 3. Guarde essa chave — é o `SERPAPI_KEY` que vira secret no passo 4 abaixo.
 
-**Sobre a cota:** cada busca é 1 rota + 1 data. Com 3 hubs × 3 datas de ida
-(padrão do script) são 9 buscas/dia ≈ 270/mês — um tiquinho acima das 250
-grátis. Se quiser ficar 100% dentro do grátis, reduza para 2 datas de ida
-(`DATAS_IDA` no script) → 6/dia ≈ 180/mês. Ou rode dia sim, dia não.
+**Sobre a cota:** cada busca é 1 rota + 1 data. Com 4 hubs × 3 datas de ida
+(padrão do script) são 12 buscas por execução; rodando dia sim/dia não
+(padrão do workflow) dá ~180/mês — dentro das 250 grátis com folga.
 
 ### 2. Criar um "app password" do Gmail (ou outro provedor SMTP)
 1. Se usar Gmail: ative a verificação em duas etapas na conta e gere uma
@@ -135,13 +135,15 @@ Tudo que você provavelmente vai querer mexer está no topo do
 - `ADULTOS` / `CRIANCAS`: composição do grupo (já em 2 e 2).
 - `TETO_PRECO_BRL`: preço total do grupo (porta a porta) abaixo do qual você
   quer o alerta por email. Está em R$ 20.000; ajuste conforme os valores reais.
-- `DESTINO`: pode trocar `MCO` (Orlando) por `MIA` (Miami) para comparar.
+- `DESTINO`: `MIA` (Miami) — só voo direto. Orlando (`MCO`) não tem voo
+  direto saindo do Brasil, por isso não é mais monitorado.
 
 **Consumo da cota (250 buscas/mês grátis) — configuração atual:**
-- 5 origens (THE direto + FOR/BEL/BSB/GRU) × 3 datas = 15 buscas por execução
+- 4 hubs (FOR/BEL/BSB/GRU) × 3 datas = 12 buscas por execução, sempre com
+  filtro de voo direto (`stops=1` no SerpApi)
 - Doméstico desligado (`MONITORAR_DOMESTICO = False`) — os preços THE→hub
   variam pouco; use os valores de referência já coletados no histórico
-- Agendamento: **dia sim/dia não** (cron `0 12 */2 * *`) → ~225 buscas/mês,
+- Agendamento: **dia sim/dia não** (cron `0 12 */2 * *`) → ~180 buscas/mês,
   dentro das 250 grátis com folga
 - Se religar o doméstico ou voltar pra diário, refaça a conta pra não estourar
 
@@ -155,11 +157,10 @@ hub e por data — isso ajuda a decidir a melhor hora de comprar.
 ## Limitações honestas
 
 - **Cota gratuita.** São 250 buscas/mês no plano free do SerpApi. O padrão
-  (3 hubs × 3 datas = 9/dia) passa um pouco disso ao longo do mês; reduza
-  `DATAS_IDA` para 2 datas, ou rode dia sim/dia não, se quiser ficar 100%
-  dentro do grátis.
-- **Dois trechos separados.** O total soma Teresina → hub + hub → Orlando,
-  comprados separadamente. Confira se os horários das conexões casam antes de
-  comprar (o robô soma preços, mas não valida se dá tempo entre um voo e outro).
+  (4 hubs × 3 datas = 12 buscas por execução, dia sim/dia não) fica dentro
+  do grátis com folga; se aumentar hubs/datas ou a frequência, refaça a conta.
+- **Dois trechos separados.** O total soma Teresina → hub (doméstico) + hub →
+  Miami (sempre voo direto), comprados separadamente. Confira se o horário de
+  chegada do doméstico casa com a saída do internacional antes de comprar.
 - **Não compra a passagem.** Ele só avisa. O preço vem do Google Flights;
   confirme no site da companhia (datas e passageiros exatos) antes de fechar.

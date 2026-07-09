@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THE → MCO · Painel de Passagens</title>
+<title>Teresina → Miami (voo direto) · Painel de Passagens</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
@@ -287,8 +287,8 @@
 <body>
 <div class="wrap">
   <p class="eyebrow">Busca automática · roda todo dia</p>
-  <h1>Rumo a Orlando</h1>
-  <p class="subtitle">preço real 2 adultos + 2 crianças · janeiro de 2027 · Teresina + FOR / BEL / BSB / GRU → Orlando · Google Flights via SerpApi</p>
+  <h1>Rumo a Miami</h1>
+  <p class="subtitle">preço real 2 adultos + 2 crianças · janeiro de 2027 · Teresina → FOR / BEL / BSB / GRU → Miami (voo direto, sem escalas) · Google Flights via SerpApi</p>
 
   <div class="board">
     <div class="flap-row">
@@ -303,7 +303,7 @@
       <span class="dot"></span><span id="status-text"></span>
     </div>
     <p style="margin:14px 0 0; font-size:12px; color:var(--text-dim); line-height:1.5;">
-      Os dois trechos (Teresina → hub e hub → Orlando) são comprados <b style="color:var(--text)">separadamente</b> — confira se os horários das conexões casam antes de comprar.
+      Os dois trechos (Teresina → hub e hub → Miami, este sempre <b style="color:var(--text)">voo direto</b>) são comprados <b style="color:var(--text)">separadamente</b> — confira se o horário de chegada do doméstico casa com a saída do internacional antes de comprar.
     </p>
   </div>
 
@@ -317,7 +317,7 @@
     </div>
     <div class="casc" id="detalhe-casc"></div>
     <p class="leg-note" style="margin-top:16px;">
-      Itinerário da <b>ida internacional</b> lido do Google Flights. O trecho Teresina → hub é <b>estimativa de referência</b> (busca doméstica desligada p/ economizar cota) — confirme voos e horários no site da companhia antes de comprar.
+      Itinerário da <b>ida internacional</b> (sempre voo direto) lido do Google Flights. O trecho Teresina → hub é <b>estimativa de referência</b> (busca doméstica desligada p/ economizar cota) — confirme voos e horários no site da companhia antes de comprar.
     </p>
   </div>
 
@@ -344,11 +344,11 @@
 
   <div class="panel" id="table-panel">
     <p class="panel-title">Últimas datas de ida monitoradas</p>
-    <p class="panel-sub">Total = Teresina→hub + hub→Orlando. O selo compara com a opção mais barata da mesma data: <span class="tag tag-best">melhor</span> <span class="tag tag-mid">+até 30%</span> <span class="tag tag-expensive">+30% ou mais</span></p>
+    <p class="panel-sub">Total = Teresina→hub + hub→Miami (direto). O selo compara com a opção mais barata da mesma data: <span class="tag tag-best">melhor</span> <span class="tag tag-mid">+até 30%</span> <span class="tag tag-expensive">+30% ou mais</span></p>
     <div style="overflow-x:auto;">
       <table>
         <thead>
-          <tr><th>Busca</th><th>Hub</th><th>Ida</th><th>Hub→Orlando</th><th>THE→Hub</th><th>Total</th></tr>
+          <tr><th>Busca</th><th>Hub</th><th>Ida</th><th>Hub→Miami</th><th>THE→Hub</th><th>Total</th></tr>
         </thead>
         <tbody id="table-body"></tbody>
       </table>
@@ -451,7 +451,7 @@ function renderizarDetalhe(maisBarato) {
       </div>`;
   }
 
-  // 2) Trecho internacional hub -> Orlando (itinerário real, com conexões)
+  // 2) Trecho internacional hub -> Miami (itinerário real, sempre direto)
   if (det && det.segmentos && det.segmentos.length) {
     const segs = det.segmentos;
     const dur = det.duracao_total_min ? ` · ${fmtDur(det.duracao_total_min)} no total` : '';
@@ -459,7 +459,7 @@ function renderizarDetalhe(maisBarato) {
       <div class="leg">
         <span class="leg-dot intl"></span>
         <div class="leg-route">
-          ${maisBarato.hub_nome || maisBarato.hub} → Orlando (MCO)
+          ${maisBarato.hub_nome || maisBarato.hub} → Miami (MIA)
           <span class="leg-kind kind-intl">internacional · ida</span>
           <span class="casc-price" style="margin-left:auto;">${fmtBRL(maisBarato.preco_internacional_brl)}</span>
         </div>
@@ -489,7 +489,7 @@ function renderizarDetalhe(maisBarato) {
       <div class="leg">
         <span class="leg-dot intl"></span>
         <div class="leg-route">
-          ${maisBarato.hub_nome || maisBarato.hub} → Orlando (MCO)
+          ${maisBarato.hub_nome || maisBarato.hub} → Miami (MIA)
           <span class="casc-price" style="margin-left:auto;">${fmtBRL(maisBarato.preco_internacional_brl)}</span>
         </div>
         <div class="leg-note">itinerário detalhado ainda não capturado nesta busca</div>
@@ -511,7 +511,7 @@ function renderizar(historico) {
   document.getElementById('flap-price').textContent = fmtBRL(maisBarato.preco_total_brl);
   document.getElementById('flap-price').classList.remove('loading');
   document.getElementById('flap-ida').textContent = fmtData(maisBarato.data_ida) + ' → ' + fmtData(maisBarato.data_volta);
-  document.getElementById('flap-volta').textContent = 'Teresina → ' + (maisBarato.hub_nome || maisBarato.hub) + ' → Orlando';
+  document.getElementById('flap-volta').textContent = 'Teresina → ' + (maisBarato.hub_nome || maisBarato.hub) + ' → Miami';
   if (maisBarato.preco_domestico_brl) {
     document.getElementById('flap-cia').textContent =
       'intl ' + fmtBRL(maisBarato.preco_internacional_brl) + ' + THE→hub ' + fmtBRL(maisBarato.preco_domestico_brl);

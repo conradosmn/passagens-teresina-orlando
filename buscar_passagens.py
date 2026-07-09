@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-Agente de busca diária de passagens rumo a Orlando (jan/2027)
+Agente de busca diária de passagens rumo a Miami (jan/2027)
 2 adultos + 2 crianças -- preço REAL do grupo, via Google Flights (SerpApi).
 
-Não existe voo Teresina -> Orlando direto. Este agente monitora os trechos
-internacionais a partir dos hubs com voo para Orlando (Fortaleza, Belém e
-Brasília). A perna Teresina -> hub será adicionada numa etapa seguinte; por
-ora, você casa os horários manualmente ao comprar.
+Só interessam voos DIRETOS (sem escalas). Não existe voo Teresina -> Miami
+direto, então o agente monitora o trecho internacional direto a partir dos
+hubs que voam sem escala pra Miami (Fortaleza, Belém, Brasília, São Paulo).
+A perna Teresina -> hub é doméstica e você casa os horários manualmente ao
+comprar (os dois bilhetes são separados).
 
 Roda via GitHub Actions (agendado), consulta o Google Flights através do
 SerpApi para cada hub em datas de janeiro/2027, guarda o histórico em
@@ -42,16 +43,16 @@ from email.mime.text import MIMEText
 # CONFIGURAÇÃO -- ajuste aqui o que quiser sem mexer no resto do código
 # ---------------------------------------------------------------------------
 
-DESTINO = "MCO"      # Orlando (Orlando Intl.) -- pode trocar p/ "MIA" se quiser comparar
+DESTINO = "MIA"       # Miami Intl. -- só voo DIRETO; Orlando (MCO) não tem
+DESTINO_NOME = "Miami"
 
 ORIGEM_DOMESTICA = "THE"   # Teresina -- de onde sai a perna doméstica até o hub
 
-# Hubs de partida rumo a Orlando (código IATA: nome amigável).
-# THE (Teresina direto) é um teste: o Google Flights monta as conexões
-# sozinho (via FOR/BSB/GRU etc.) num bilhete só, com horários que casam.
-# Se der bom resultado, pode aposentar a lógica de somar trechos separados.
+# Hubs de partida rumo a Miami (código IATA: nome amigável).
+# Só ficam aqui hubs que fazem sentido pra voo DIRETO. THE (Teresina) foi
+# removido: não existe voo internacional direto saindo de lá, então a busca
+# nonstop nunca dá resultado -- manter só desperdiçaria cota do SerpApi.
 HUBS = {
-    "THE": "Teresina (direto/conexão auto)",
     "FOR": "Fortaleza",
     "BEL": "Belém",
     "BSB": "Brasília",
@@ -77,8 +78,8 @@ DURACAO_VIAGEM_DIAS = 10
 MONITORAR_DOMESTICO = False
 # Com o monitoramento doméstico desligado, usamos estes valores de REFERÊNCIA
 # (coletados na busca real de 07/07/2026) para manter o total porta a porta
-# comparável com o THE direto, sem gastar cota. Atualize de vez em quando
-# rodando uma vez com MONITORAR_DOMESTICO = True, ou conferindo manualmente.
+# completo, sem gastar cota extra. Atualize de vez em quando rodando uma vez
+# com MONITORAR_DOMESTICO = True, ou conferindo manualmente.
 DOMESTICO_REFERENCIA = {
     "FOR": 7878.0,
     "BEL": 8496.0,
@@ -141,13 +142,17 @@ def extrair_detalhes(voo):
     }
 
 
-def buscar_voo(origem, destino, data_ida, data_volta):
+def buscar_voo(origem, destino, data_ida, data_volta, apenas_direto=True):
     """
     Consulta o Google Flights para uma rota/data específica. Devolve um dict
     {"preco": float, "detalhes": {...}|None} com o menor preço do grupo (BRL)
     e o itinerário da opção de voo mais barata (para a cascata), ou None se
     não houver resultado. Os voos de ida-e-volta do Google trazem primeiro o
     trecho de IDA, então o itinerário capturado é o da ida.
+
+    apenas_direto=True filtra só voos sem escala (stops=1 no SerpApi). Se a
+    rota não tiver opção direta, o Google/SerpApi simplesmente não retorna
+    nada -- não retorna voo com conexão como "melhor esforço".
     """
     params = {
         "engine": "google_flights",
@@ -164,6 +169,8 @@ def buscar_voo(origem, destino, data_ida, data_volta):
         "travel_class": "1",  # 1 = econômica
         "api_key": os.environ["SERPAPI_KEY"],
     }
+    if apenas_direto:
+        params["stops"] = "1"  # 1 = somente voo direto (SerpApi google_flights)
     try:
         resp = requests.get(SERPAPI_URL, params=params, timeout=60)
     except requests.RequestException as e:
@@ -251,8 +258,6 @@ def main():
     if MONITORAR_DOMESTICO:
         print("--- Perna doméstica (Teresina -> hub) ---")
         for origem_hub, nome_hub in HUBS.items():
-            if origem_hub == ORIGEM_DOMESTICA:
-                continue  # THE direto não tem perna doméstica (é a própria origem)
             res_dom = buscar_voo(ORIGEM_DOMESTICA, origem_hub,
                                  DATA_DOMESTICA_IDA, DATA_DOMESTICA_VOLTA)
             time.sleep(1)
@@ -263,14 +268,15 @@ def main():
                 print(f"Teresina -> {nome_hub} ({origem_hub}): R$ {preco_dom:.2f}")
                 domestico_por_hub[origem_hub] = preco_dom
 
-    # 2) Trecho internacional hub -> Orlando, por data, somando o doméstico.
-    #    Se o monitoramento doméstico está desligado, usa os valores de
-    #    referência fixos (sem gastar cota) pra manter o total comparável.
+    # 2) Trecho internacional hub -> Miami (só direto), por data, somando o
+    #    doméstico. Se o monitoramento doméstico está desligado, usa os
+    #    valores de referência fixos (sem gastar cota) pra manter o total
+    #    comparável.
     if not MONITORAR_DOMESTICO:
         domestico_por_hub = dict(DOMESTICO_REFERENCIA)
         print("--- Perna doméstica: usando valores de REFERÊNCIA (sem busca) ---")
 
-    print("--- Trecho internacional (hub -> Orlando) + total ---")
+    print(f"--- Trecho internacional (hub -> {DESTINO_NOME}, só direto) + total ---")
     novos_registros = []
     for origem_hub, nome_hub in HUBS.items():
         for data_ida in DATAS_IDA:
@@ -281,7 +287,7 @@ def main():
             time.sleep(1)
 
             if res_intl is None:
-                print(f"{nome_hub} ({origem_hub}) {data_ida}: sem resultado internacional.")
+                print(f"{nome_hub} ({origem_hub}) {data_ida}: sem voo direto pra {DESTINO_NOME}.")
                 continue
 
             preco_intl = res_intl["preco"]
@@ -308,8 +314,8 @@ def main():
                 # Média por passageiro (total do grupo / 4). É média mesmo:
                 # o Google devolve preço do grupo, não o unitário por pessoa.
                 "preco_medio_passageiro_brl": preco_por_pax,
-                # Itinerário da IDA internacional (hub -> Orlando), p/ a cascata.
-                # O trecho Teresina -> hub é valor de referência, sem voos.
+                # Itinerário da IDA internacional (hub -> Miami, direto), p/ a
+                # cascata. O trecho Teresina -> hub é valor de referência, sem voos.
                 "detalhes_ida": detalhes_intl,
                 "fonte": "google_flights_serpapi",
             })
@@ -342,22 +348,23 @@ def main():
                      if dom else
                      "  - Teresina -> hub: sem dado hoje (some manualmente)\n")
         corpo = (
-            f"Achei uma combinação rumo a Orlando abaixo do teto de "
+            f"Achei uma combinação rumo a {DESTINO_NOME} abaixo do teto de "
             f"R$ {TETO_PRECO_BRL:.2f} (preço total, 2 adultos + 2 crianças)!\n\n"
             f"Melhor rota hoje: Teresina -> {mais_barato['hub_nome']} "
-            f"({mais_barato['hub']}) -> Orlando\n\n"
+            f"({mais_barato['hub']}) -> {DESTINO_NOME} (voo direto)\n\n"
             f"Total porta a porta: R$ {mais_barato['preco_total_brl']:.2f}\n"
-            f"  - {mais_barato['hub_nome']} -> Orlando: "
+            f"  - {mais_barato['hub_nome']} -> {DESTINO_NOME}: "
             f"R$ {mais_barato['preco_internacional_brl']:.2f}\n"
             f"{linha_dom}\n"
             f"Ida (internacional): {mais_barato['data_ida']}\n"
             f"Volta (internacional): {mais_barato['data_volta']}\n\n"
-            f"Preços lidos do Google Flights via SerpApi (trechos comprados "
-            f"separadamente). Confira se os horários das conexões casam e "
-            f"confirme no site da companhia antes de fechar.\n"
+            f"Preços lidos do Google Flights via SerpApi (trecho internacional "
+            f"sempre voo direto, sem escala). Confira se o horário do trecho "
+            f"doméstico Teresina -> hub casa com o internacional e confirme no "
+            f"site da companhia antes de fechar.\n"
             f"(Busca automática rodada em {hoje} via GitHub Actions)"
         )
-        enviar_email("✈️ Combinação boa Teresina -> Orlando!", corpo)
+        enviar_email(f"✈️ Combinação boa Teresina -> {DESTINO_NOME}!", corpo)
         print("Email de alerta enviado.")
     else:
         print("Preço ainda acima do teto definido. Nenhum email enviado.")

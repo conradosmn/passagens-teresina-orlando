@@ -7,9 +7,13 @@
 ## O que este projeto é
 
 Agente automático de monitoramento de preço de passagens aéreas para uma
-viagem familiar **Teresina → Orlando**, **2 adultos + 2 crianças**, por
+viagem familiar **Teresina → Miami**, **2 adultos + 2 crianças**, por
 **~10 dias na SEGUNDA SEMANA de janeiro/2027** (idas testadas: 08, 10 e
 12/01; voltas 10 dias depois).
+
+> **Atualizado em 09/07/2026**: o destino internacional mudou de Orlando
+> (MCO) para **Miami (MIA)**, e agora só interessam **voos diretos** (sem
+> escala) no trecho internacional — ver decisão #9 e §"Como funciona a busca".
 
 Roda sozinho via **GitHub Actions** (dia sim/dia não), consulta o **Google
 Flights via SerpApi**, salva histórico em `docs/data/historico.json`
@@ -33,16 +37,22 @@ abaixo do teto.
 
 ## Como funciona a busca (lógica atual)
 
-1. Para cada origem em `HUBS` (THE, FOR, BEL, BSB, GRU) × cada data em
-   `DATAS_IDA` (3 datas): busca ida-e-volta no Google Flights (SerpApi),
-   econômica, 2 adultos + 2 crianças, moeda BRL. **15 buscas por execução.**
-2. **THE = "Teresina direto"**: o Google monta a conexão sozinho num bilhete
-   único. Serve de comparação contra a estratégia de trechos separados.
-3. Para os demais hubs, soma-se ao preço internacional um **valor doméstico
+1. Para cada origem em `HUBS` (FOR, BEL, BSB, GRU) × cada data em
+   `DATAS_IDA` (3 datas): busca ida-e-volta **hub → MIA (DESTINO)** no Google
+   Flights (SerpApi), econômica, 2 adultos + 2 crianças, moeda BRL, **só voo
+   direto** (`apenas_direto=True` em `buscar_voo` → `stops=1` no SerpApi).
+   **12 buscas por execução** (4 hubs × 3 datas).
+2. **THE (Teresina) foi removido de `HUBS`**: não existe voo internacional
+   direto saindo de Teresina, então com o filtro de voo direto a busca nunca
+   dava resultado — mantê-lo só desperdiçava cota. `ORIGEM_DOMESTICA = "THE"`
+   continua existindo (é de onde sai a perna doméstica Teresina → hub).
+3. Aos demais hubs, soma-se ao preço internacional um **valor doméstico
    de REFERÊNCIA fixo** (THE→hub ida-e-volta), definido em
    `DOMESTICO_REFERENCIA` no script — a busca doméstica ao vivo está
    DESLIGADA (`MONITORAR_DOMESTICO = False`) para economizar cota.
-   Valores de referência coletados em busca real de 07/07/2026:
+   Valores de referência coletados em busca real de 07/07/2026 (quando o
+   destino ainda era MCO — a perna doméstica Teresina→hub não muda com o
+   destino internacional, então seguem válidos):
    FOR 7.878 / BEL 8.496 / BSB 6.670 / GRU 8.125 (R$, grupo todo, ida-volta).
 4. O menor total (porta a porta) do dia é comparado ao `TETO_PRECO_BRL`
    (atualmente **R$ 20.000**); abaixo disso, dispara email.
@@ -59,14 +69,24 @@ abaixo do teto.
    plano grátis de 250 buscas/mês. Conta do Conrado: Free Plan.
 5. **Trechos separados vencem o bilhete único**: no teste real (07/07/2026),
    THE direto deu R$ 34.029 vs. THE→GRU + GRU→MCO = R$ 23.143 (R$ 11 mil de
-   diferença). Por isso monitoramos os dois: THE direto fica como comparação.
-6. **GRU mantido como hub** (foi o mais barato no teste); THE mantido com
-   flag visual de caro no painel.
-7. **Cota**: 15 buscas × ~15 execuções/mês ≈ 225 → cabe nas 250 grátis.
-   NÃO voltar para execução diária nem religar o doméstico sem refazer a conta.
+   diferença). Foi assim que decidimos monitorar hub → destino em vez de
+   deixar o Google montar a conexão sozinho a partir de Teresina.
+6. **GRU mantido como hub** (foi o mais barato no teste).
+7. **Cota**: com 4 hubs (sem THE) × 3 datas = 12 buscas/execução, ~15
+   execuções/mês ≈ 180 → cabe nas 250 grátis com folga. NÃO voltar para
+   execução diária nem religar o doméstico sem refazer a conta.
 8. **Preços observados caem ao longo de janeiro** (15/01 mais barato que
    05/01 em todos os hubs) — fim das férias escolares. A segunda semana pega
    o meio da curva.
+9. **Destino trocado de Orlando (MCO) para Miami (MIA) + só voo direto**
+   (decisão de 09/07/2026, a pedido do Conrado: ele não quer voo com escala).
+   THE saiu de `HUBS` porque o filtro de voo direto (`stops=1`) nunca dava
+   resultado a partir de Teresina — sem sentido gastar cota com isso. Não é
+   fallback (MCO se não tiver MIA, ou vice-versa): é substituição definitiva,
+   só MIA é buscado agora. Histórico antigo (`historico.json`) tem registros
+   de MCO anteriores a essa data — misturados no mesmo gráfico/tabela com os
+   novos registros de MIA; se isso confundir a leitura do painel, considerar
+   filtrar por data ou limpar o histórico antigo (ainda não decidido).
 
 ## Secrets configurados no GitHub (Settings → Secrets → Actions)
 
@@ -88,10 +108,11 @@ abaixo do teto.
   null em registros antigos), fonte`.
 - **Cascata da viagem** no painel: mostra a melhor combinação do dia detalhada
   — trecho doméstico como estimativa de referência (sem voos) + itinerário
-  real da ida internacional (companhia, voo, horários, conexões) + média por
-  passageiro. Alimentada pelo campo `detalhes_ida`, capturado da MESMA resposta
-  do SerpApi (não gasta busca extra). A gravação é idempotente por dia (rodar
-  2x no mesmo dia substitui, não duplica).
+  real da ida internacional (companhia, voo, horários; agora sempre voo
+  direto, sem conexões) + média por passageiro. Alimentada pelo campo
+  `detalhes_ida`, capturado da MESMA resposta do SerpApi (não gasta busca
+  extra). A gravação é idempotente por dia (rodar 2x no mesmo dia substitui,
+  não duplica).
 
 ## Fluxo de trabalho com git (duas máquinas!)
 
@@ -102,14 +123,18 @@ resolver com `git pull origin main --no-rebase` e concluir o merge.
 
 ## Pendências / próximos passos possíveis
 
-- [ ] Confirmar que o push das últimas mudanças (datas 08/10/12-jan +
-      economia de cota) subiu a partir do desktop.
-- [ ] Rodar o workflow manualmente 1x para popular o histórico com os preços
-      do período correto (segunda semana de janeiro).
-- [ ] Calibrar `TETO_PRECO_BRL` conforme a tendência real (hoje R$ 20.000;
-      o melhor total visto foi R$ 23.143).
+- [ ] Confirmar que o push da mudança de destino (MCO → MIA, só voo direto,
+      hub THE removido) subiu certinho.
+- [ ] Rodar o workflow manualmente 1x pra ver se os hubs têm voo direto pra
+      Miami nas datas monitoradas (se algum hub não tiver, a busca daquele
+      hub/data simplesmente não retorna nada — sem erro, sem alerta).
+- [ ] Recalibrar `TETO_PRECO_BRL` (hoje R$ 20.000) com base nos novos preços
+      MIA + voo direto — pode ser bem diferente do que era com MCO.
 - [ ] A cada 1-2 meses, atualizar `DOMESTICO_REFERENCIA` (religar
       `MONITORAR_DOMESTICO = True` por UMA rodada, copiar os valores, desligar).
+- [ ] Decidir o que fazer com o histórico antigo de MCO em
+      `docs/data/historico.json` (manter misturado, filtrar por data no
+      painel, ou limpar) — ver decisão #9.
 - [ ] Ideia futura: validar horários de conexão entre trechos separados
       (hoje o robô soma preços mas não confere se os horários casam — o
       usuário confere manualmente antes de comprar).
